@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Clientes - J-Car</title>
+
+  <!-- reaproveitamos o mesmo visual -->
+  <link rel="stylesheet" href="../CSS/produtos.css">
+  <link rel="stylesheet" href="../CSS/filtroC.css">
+  <link rel="stylesheet" href="../CSS/clientes.css">
+</head>
+
+<body>
+
+  <!-- LOGO -->
+  <div class="logo-wrapper">
+    <img src="../fotos/logo.png" alt="Logo J-Car" class="logo">
+  </div>
+
+  <div class="layout">
+
+   <!-- ================= COLUNA ESQUERDA (FILTROS) ================= -->
+    <div class="col-filtro">
+      <table class="table-filtro">
+
+        <tr class="filtroT">
+          <th colspan="2" >Filtros</th>
+        </tr>
+
+        <tr>
+          <td >Nome</td>
+          <td>
+            <input type="text" placeholder="Ex: João">
+          </td>
+        </tr>
+
+        <tr>
+          <td>CPF / CNPJ</td>
+          <td>
+            <input type="text" placeholder="Ex: 123.456.789-00">
+          </td>
+        </tr>
+
+        <tr>
+          <td>Última compra</td>
+          <td>
+            <input type="date">
+          </td>
+        </tr>
+
+        <tr>
+          <td>Veículo</td>
+          <td>
+            <select>
+              <option value="">Todos</option>
+              <option>BMW 320i M Sport</option>
+              <option>BMW X6 M Competition</option>
+              <option>BMW 125i M Sport</option>
+              <option>Mercedes CLA 250 AMG</option>
+              <option>Mercedes GLE 450 AMG</option>
+              <option>Mercedes A 45 AMG</option>
+              <option>Audi A5 Sportback</option>
+              <option>Audi Q5 RS</option>
+              <option>Audi A3 RS</option>
+            </select>
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="2" align="center">
+            <a href="menu.html" class="botao-voltar">← Voltar ao menu</a>
+          </td>
+        </tr>
+
+      </table>
+    </div>
+
+    <!-- Tabela de clientes -->
+    <div class="col-tabela">
+      <table class="table">
+
+        <tr class="itens">
+          <th>Nome completo</th>
+          <th>CPF / CNPJ</th>
+          <th>Data nasc.</th>
+          <th>Telefone</th>
+          <th>Email</th>
+          <th>Endereço</th>
+          <th>Última compra</th>
+          <th>Veículo comprado</th>
+        </tr>
+
+        <tr>
+          <td>João Henrique Martins</td>
+          <td>123.456.789-10</td>
+          <td>12/03/1990</td>
+          <td>(11) 98888-1111</td>
+          <td>joao.martins@email.com</td>
+          <td>São Paulo - SP</td>
+          <td>15/08/2025</td>
+          <td>BMW 320i M Sport</td>
+        </tr>
+
+        <tr>
+          <td>Mariana Alves Costa</td>
+          <td>987.654.321-00</td>
+          <td>22/07/1988</td>
+          <td>(21) 97777-2222</td>
+          <td>mariana.costa@email.com</td>
+          <td>Rio de Janeiro - RJ</td>
+          <td>02/09/2025</td>
+          <td>Mercedes CLA 250 AMG</td>
+        </tr>
+
+        <tr>
+          <td>Empresa Silva Auto LTDA</td>
+          <td>45.123.456/0001-99</td>
+          <td>—</td>
+          <td>(11) 4002-8922</td>
+          <td>contato@silvaauto.com</td>
+          <td>Campinas - SP</td>
+          <td>18/07/2025</td>
+          <td>Audi Q5 RS</td>
+        </tr>
+
+        <tr>
+          <td>Lucas Ferreira</td>
+          <td>321.654.987-55</td>
+          <td>09/11/1995</td>
+          <td>(19) 96666-3333</td>
+          <td>lucas.ferreira@email.com</td>
+          <td>Jundiaí - SP</td>
+          <td>01/10/2025</td>
+          <td>BMW X6 M Competition</td>
+        </tr>
+
+        <tr>
+          <td>Ana Paula Ribeiro</td>
+          <td>654.987.123-44</td>
+          <td>30/01/1992</td>
+          <td>(31) 95555-4444</td>
+          <td>ana.ribeiro@email.com</td>
+          <td>Belo Horizonte - MG</td>
+          <td>21/06/2025</td>
+          <td>Audi A5 Sportback</td>
+        </tr>
+
+        <tr>
+          <td>Roberto Nogueira</td>
+          <td>741.852.963-22</td>
+          <td>14/04/1985</td>
+          <td>(41) 94444-5555</td>
+          <td>roberto.n@email.com</td>
+          <td>Curitiba - PR</td>
+          <td>12/09/2025</td>
+          <td>Mercedes GLE 450 AMG</td>
+        </tr>
+
+        <tr>
+          <td>Carla Mendes</td>
+          <td>852.741.963-11</td>
+          <td>08/06/1998</td>
+          <td>(51) 93333-6666</td>
+          <td>carla.m@email.com</td>
+          <td>Porto Alegre - RS</td>
+          <td>27/08/2025</td>
+          <td>BMW 125i M Sport</td>
+        </tr>
+
+        <tr>
+          <td>Felipe Rocha</td>
+          <td>369.258.147-00</td>
+          <td>19/09/1993</td>
+          <td>(61) 92222-7777</td>
+          <td>felipe.rocha@email.com</td>
+          <td>Brasília - DF</td>
+          <td>05/07/2025</td>
+          <td>Audi A3 RS</td>
+        </tr>
+
+        <tr>
+          <td>Auto Prime Veículos LTDA</td>
+          <td>12.987.654/0001-55</td>
+          <td>—</td>
+          <td>(47) 3111-8899</td>
+          <td>vendas@autoprime.com</td>
+          <td>Blumenau - SC</td>
+          <td>11/10/2025</td>
+          <td>Mercedes A 45 AMG</td>
+        </tr>
+
+        <tr>
+          <td>Daniel Souza</td>
+          <td>159.357.456-88</td>
+          <td>02/02/1989</td>
+          <td>(62) 91111-9999</td>
+          <td>daniel.s@email.com</td>
+          <td>Goiânia - GO</td>
+          <td>29/09/2025</td>
+          <td>Audi Q5 RS</td>
+        </tr>
+
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>

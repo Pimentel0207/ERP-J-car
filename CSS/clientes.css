@@ -1,0 +1,76 @@
+/* ======================================================
+   CLIENTES.CSS
+   Complemento visual da tela de clientes
+   Base reutilizada: produtos.css + filtro.css
+====================================================== */
+
+/* ===== AJUSTE GLOBAL DA TABELA ===== */
+.table {
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* ===== ALTURA DAS LINHAS (IGUAL PRODUTOS) ===== */
+.table tr {
+  height: 80px;
+}
+
+/* ===== CÉLULAS ===== */
+.table td {
+  padding: 12px;
+  font-size: 14px;
+  color: #111827;
+  vertical-align: middle;
+}
+
+/* ===== CABEÇALHO ===== */
+.itens th {
+  background: #2065f8;
+  color: #000;
+  padding: 14px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* ===== DESTAQUE NO NOME DO CLIENTE ===== */
+.table td:first-child {
+  font-weight: 600;
+}
+
+/* ===== ALINHAMENTO DE DATAS ===== */
+.table td:nth-child(3), /* Data nascimento */
+.table td:nth-child(7)  /* Última compra */
+{
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ===== COLUNAS MAIS LONGAS ===== */
+.table td:nth-child(6), /* Endereço */
+.table td:nth-child(8)  /* Veículo comprado */
+{
+  min-width: 180px;
+}
+
+/* ===== CPF / CNPJ ===== */
+.table td:nth-child(2) {
+  white-space: nowrap;
+}
+
+/* ===== TELEFONE ===== */
+.table td:nth-child(4) {
+  white-space: nowrap;
+}
+
+/* ===== EMAIL ===== */
+.table td:nth-child(5) {
+  font-size: 13px;
+}
+
+/* ===== RESPONSIVIDADE BÁSICA ===== */
+@media (max-width: 1200px) {
+  .table td {
+    font-size: 13px;
+  }
+}

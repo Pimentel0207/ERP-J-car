@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Login - J-Car</title>
+  <link rel="stylesheet" href="../css/login.css">
+</head>
+
+<body>
+
+  <div class="login-container">
+
+    <!-- Logo -->
+    <img src="../fotos/logo.png" alt="Logo J-Car" class="logo">
+
+    <!-- Card de vidro -->
+    <div class="login-card">
+
+      <h2>Acesso ao Sistema</h2>
+      <p class="sub">Entre com suas credenciais</p>
+
+      <input type="checkbox" id="login" hidden>
+
+      <form>
+
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="Digite seu e-mail" required>
+
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="Digite sua senha" required>
+
+        <label for="login" class="btn-fake">Entrar</label>
+
+        <p class="erro">E-mail ou senha inválidos</p>
+        <a href="signup.html" class="signup-link">Criar conta</a>
+
+      </form>
+
+    </div>
+  </div>
+
+  <script src="../js/teste.js"></script>
+
+</body>
+
+</html>

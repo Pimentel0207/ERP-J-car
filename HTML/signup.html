@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Criar Conta - J-Car</title>
+  <link rel="stylesheet" href="../css/signup.css">
+</head>
+
+<body>
+
+  <div class="signup-container">
+
+    <!-- Logo -->
+    <img src="../fotos/logo.png" alt="Logo J-Car" class="logo">
+
+    <!-- Card de vidro -->
+    <div class="signup-card">
+
+      <h2>Criar Conta</h2>
+      <p class="sub">Crie sua conta para acessar o sistema</p>
+
+      <input type="checkbox" id="signup" hidden>
+
+      <form>
+
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="Digite seu e-mail" required>
+
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="Digite sua senha" required>
+
+        <label for="confirm-password">Confirmar Senha</label>
+        <input type="password" id="confirm-password" placeholder="Confirme sua senha" required>
+
+        <label for="signup" class="btn-fake" id="btn-signup">Criar Conta</label>
+
+        <p class="erro">As senhas não conferem</p>
+        <p class="sucesso">Conta criada com sucesso!</p>
+
+        <a href="login.html" class="login-link">Já tem uma conta? Faça login</a>
+
+      </form>
+
+    </div>
+  </div>
+
+  <script src="../js/signup.js"></script>
+
+</body>
+
+</html>

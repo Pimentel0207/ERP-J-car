@@ -1,0 +1,57 @@
+.filtro {
+  max-width: 1100px;
+  width: 100%;
+
+
+  /* 🔴 alteração necessária */
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  font-family: arial;
+}
+
+.tfiltro {
+  background-color: #2065f8;
+}
+
+/* 🔴 cantos específicos do lado esquerdo */
+.filtro tr:first-child th:first-child {
+  border-top-left-radius: 16px;
+  color: #cfcfcf;
+}
+
+.filtro tr:last-child td:first-child {
+  border-bottom-left-radius: 16px;
+}
+.filtro select,
+.filtro input {
+  width: 200px;
+  height: 34px;              /* IGUAL PARA TODOS */
+  padding: 6px 10px;         /* controle interno */
+  box-sizing: border-box;    /* evita crescer sozinho */
+  font-size: 14px;
+  border-radius: 6px;
+}
+
+/* hover sutil */
+.filtro select:hover,
+.filtro input:hover {
+  border-color: #9ca3af;
+}
+
+/* foco bonito (quando clica) */
+.filtro select:focus,
+.filtro input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* placeholder mais elegante */
+.filtro input::placeholder {
+  color: #6b7280;
+}
+.pop{
+  text-align: center;
+  font-weight: bold;
+}

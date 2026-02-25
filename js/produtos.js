@@ -161,3 +161,33 @@ async function deletarCarro(id) {
 
 // Quando a página abre, carrega os carros automaticamente
 window.onload = carregarCarros;
+
+// ==========================================
+// LÓGICA DE BUSCA EM TEMPO REAL
+// ==========================================
+const inputBusca = document.getElementById('inputBusca');
+
+inputBusca.addEventListener('input', () => {
+    const termoBusca = inputBusca.value.toLowerCase(); // O que você digitou
+    const corpoTabela = document.getElementById('corpoTabelaCarros');
+    const linhas = corpoTabela.getElementsByTagName('tr');
+
+    // Percorre todas as linhas da tabela de estoque
+    for (let i = 0; i < linhas.length; i++) {
+        // Coluna 1 é Marca, Coluna 2 é Modelo (ajustado ao seu HTML)
+        const colMarca = linhas[i].getElementsByTagName('td')[1];
+        const colModelo = linhas[i].getElementsByTagName('td')[2];
+
+        if (colMarca && colModelo) {
+            const marca = colMarca.textContent.toLowerCase();
+            const modelo = colModelo.textContent.toLowerCase();
+
+            // Se o termo digitado existir na marca OU no modelo, a linha fica visível
+            if (marca.includes(termoBusca) || modelo.includes(termoBusca)) {
+                linhas[i].style.display = "";
+            } else {
+                linhas[i].style.display = "none";
+            }
+        }
+    }
+});

@@ -1,76 +1,222 @@
-/* ======================================================
-   CLIENTES.CSS
-   Complemento visual da tela de clientes
-   Base reutilizada: produtos.css + filtro.css
-====================================================== */
+/* ==========================================
+   RESET E FUNDO DA PÁGINA
+   ========================================== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f3f4f6;
+  /* Fundo cinza bem clarinho e limpo */
+}
 
-/* ===== AJUSTE GLOBAL DA TABELA ===== */
+/* ==========================================
+   TOPO (LOGO)
+   ========================================== */
+.logo-wrapper {
+  background-color: #2d4475;
+  /* Fundo escuro igual ao menu */
+  padding: 15px 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  height: 50px;
+}
+
+/* ==========================================
+   LAYOUT GERAL (Flexbox)
+   ========================================== */
+.layout {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  align-items: flex-start;
+}
+
+/* ==========================================
+   COLUNA ESQUERDA (FILTROS)
+   ========================================== */
+.col-filtro {
+  width: 280px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.table-filtro {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.filtroT th {
+  font-size: 18px;
+  color: #111827;
+  text-align: left;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.pop {
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+  padding-top: 15px;
+}
+
+.table-filtro input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-top: 5px;
+  font-family: inherit;
+  outline: none;
+}
+
+.table-filtro input:focus {
+  border-color: #2563eb;
+}
+
+.botao-voltar {
+  display: inline-block;
+  margin-top: 20px;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.botao-voltar:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================
+   COLUNA DIREITA (TABELA DE CLIENTES)
+   ========================================== */
+.col-tabela {
+  flex: 1;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
 .table {
   width: 100%;
-  max-width: 1100px;
-}
-
-/* ===== ALTURA DAS LINHAS (IGUAL PRODUTOS) ===== */
-.table tr {
-  height: 80px;
-}
-
-/* ===== CÉLULAS ===== */
-.table td {
-  padding: 12px;
+  border-collapse: collapse;
   font-size: 14px;
-  color: #111827;
-  vertical-align: middle;
-}
-
-/* ===== CABEÇALHO ===== */
-.itens th {
-  background: #2065f8;
-  color: #000;
-  padding: 14px;
-  font-weight: 600;
   text-align: left;
-  white-space: nowrap;
 }
 
-/* ===== DESTAQUE NO NOME DO CLIENTE ===== */
-.table td:first-child {
+.table th {
+  background-color: #2563eb;
+  /* Azul corporativo */
+  color: #ffffff;
+  padding: 15px 10px;
   font-weight: 600;
 }
 
-/* ===== ALINHAMENTO DE DATAS ===== */
-.table td:nth-child(3), /* Data nascimento */
-.table td:nth-child(7)  /* Última compra */
-{
-  text-align: center;
-  white-space: nowrap;
+.table th:first-child {
+  border-top-left-radius: 6px;
 }
 
-/* ===== COLUNAS MAIS LONGAS ===== */
-.table td:nth-child(6), /* Endereço */
-.table td:nth-child(8)  /* Veículo comprado */
-{
-  min-width: 180px;
+.table th:last-child {
+  border-top-right-radius: 6px;
 }
 
-/* ===== CPF / CNPJ ===== */
-.table td:nth-child(2) {
-  white-space: nowrap;
+.table td {
+  padding: 15px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
 }
 
-/* ===== TELEFONE ===== */
-.table td:nth-child(4) {
-  white-space: nowrap;
+.table tr:hover td {
+  background-color: #f9fafb;
+  /* Destaque ao passar o mouse */
 }
 
-/* ===== EMAIL ===== */
-.table td:nth-child(5) {
-  font-size: 13px;
+/* ==========================================
+   MODAL DE CADASTRO
+   ========================================== */
+.modal-fundo {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-/* ===== RESPONSIVIDADE BÁSICA ===== */
-@media (max-width: 1200px) {
-  .table td {
-    font-size: 13px;
-  }
+.modal-conteudo {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.fechar-modal {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.fechar-modal:hover {
+  color: #ef4444;
+}
+
+#formCadastrarCliente label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #374151;
+  font-size: 14px;
+}
+
+#formCadastrarCliente input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-family: inherit;
+  outline: none;
+}
+
+#formCadastrarCliente input:focus {
+  border-color: #2563eb;
+}
+
+.btn-salvar {
+  width: 100%;
+  background-color: #10b981;
+  /* Verde de sucesso */
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 25px;
+  transition: 0.2s;
+}
+
+.btn-salvar:hover {
+  background-color: #059669;
 }

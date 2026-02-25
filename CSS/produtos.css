@@ -1,264 +1,195 @@
+/* ==========================================
+   PRODUTOS (ESTOQUE) - DESIGN LIMPO E UNIFICADO
+   ========================================== */
+
 body {
-  background: #f3f4f6;
-
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f3f4f6;
 }
 
-/* Tabela */
-.table {
+/* 1. TOPO (LOGO) - Igual aos Clientes */
+.logo-wrapper {
+  background-color: #2d4475;
+  /* Azul marinho elegante */
+  padding: 15px 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  height: 50px;
+  display: block;
+}
+
+/* 2. LAYOUT GERAL */
+.layout {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  align-items: flex-start;
+}
+
+/* 3. COLUNA ESQUERDA (FILTROS) - Classe: filtro2 */
+.filtro2 {
+  width: 300px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.filtro {
   width: 100%;
-  max-width: 1100px;
-  border-left: none;
   border-collapse: collapse;
-  overflow: hidden;
-  font-family: arial;
-  border-left: solid 1px darkgray;
 }
 
-.table tr {
-  height: 80px;
-}
-
-.table td,
-.table th {
-  vertical-align: middle;
-}
-
-/* Cabeçalho */
-.itens {
-  background: #2065f8;
-  color: #000000;
+/* Título do Filtro: tfiltro (SEM FUNDO AZUL) */
+.tfiltro th {
+  font-size: 18px;
+  color: #111827;
   text-align: left;
-  padding: 12px;
-  font-weight: 600;
+  padding-bottom: 20px;
   border-bottom: 1px solid #e5e7eb;
+  background: transparent !important;
+  /* Garante que não haverá cor de fundo */
 }
 
-.itens th {
-  background: transparent;
-  /* 🔥 evita camada dupla */
-  color: #cfcfcf;
-}
-
-.i1 {
-  text-align: center;
-}
-
-/* Células */
-td {
-  padding: 12px;
-  color: #111827;
-}
-
-/* Nome do carro */
-.carro {
+.pop {
   font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+  padding-top: 15px;
 }
 
-/* Preço */
-.valor {
-  text-align: center;
-  font-weight: 600;
-  color: #111827;
-  font-variant-numeric: tabular-nums;
+.filtro input,
+.filtro select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-top: 5px;
+  font-family: inherit;
+  outline: none;
 }
 
-.v1 {
-  text-align: center;
+.filtro input:focus {
+  border-color: #2563eb;
 }
-
-/* R$ separado */
-.valor::before {
-  content: "R$ ";
-  color: #16a34a;
-  font-weight: 500;
-}
-
-/* Botao de voltar */
 
 .botao-voltar {
   display: inline-block;
-  background: #2563eb;
-  color: #fff;
+  margin-top: 20px;
+  color: #2563eb;
   text-decoration: none;
-  padding: 10px 18px;
+  font-weight: bold;
+}
+
+/* 4. TABELA DE ESTOQUE (DIREITA) */
+/* Estilizando a tabela para parecer um "Card" branco */
+.layout>.table {
+  flex: 1;
+  background-color: #ffffff;
+  border-collapse: separate;
+  /* Fundamental para o arredondamento funcionar */
+  border-spacing: 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
+  /* Arredonda a caixa branca por fora */
+  overflow: hidden;
+  /* Garante que o azul não "escape" das bordas arredondadas */
+  padding: 20px;
+
+}
+
+.table th {
+  background-color: #2563eb;
+  /* Cabeçalho azul vibrante */
+  color: #ffffff;
+  padding: 15px 10px;
+  text-align: left;
   font-weight: 600;
 }
 
-.botao-voltar:hover {
-  background: #1d4ed8;
+.table td {
+  padding: 15px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+  background-color: #fff;
 }
 
-
-/* Imagem */
-
-.col-img {
-  width: 90px;
-  height: 60px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: hidden;
+.table tr:hover td {
+  background-color: #f9fafb;
 }
 
-.Imagem {
-  max-width: 70px;
-  max-height: 45px;
-  object-fit: contain;
-  border-radius: 6px;
-}
-
-/* Marca */
-
-.marca td {
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  text-align: center;
-  color: #000000;
-}
-
-/* Logo */
-
-.logo {
-  max-width: 220px;
-  height: auto;
+/* Tamanho das imagens na tabela */
+.table img {
+  width: 80px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
   display: block;
-  margin: 12px auto;
+  margin: 0 auto;
 }
 
-/* Tabelas */
-
-.layout {
-  display: flex;
-  gap: 0;
-  max-width: fit-content;
-  margin: 40px auto;
-  align-items: flex-start;
-  background-color: lightgray;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.col-tabela {
-  flex: 1;
-}
-
-.col-filtro {
-  width: 280px;
-}
-
-.table-filtro {
-  width: 100%;
-}
-
-/* Fundo escuro atrás do modal */
+/* 5. MODAL DE CADASTRO */
 .modal-fundo {
   display: none;
-  /* Começa escondido */
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.6);
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  /* Fica por cima de tudo */
 }
 
-/* A caixinha branca do formulário */
 .modal-conteudo {
-  background: white;
+  background-color: #fff;
   padding: 30px;
-  border-radius: 16px;
-  width: 350px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  position: relative;
-}
-
-/* O "X" para fechar */
-.fechar-modal {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 24px;
-  cursor: pointer;
-  color: #6b7280;
-}
-
-/* Estilo do formulário do modal */
-#formCadastrarCarro {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 #formCadastrarCarro label {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: -5px;
-}
-
-#formCadastrarCarro input {
-  height: 38px;
-  border-radius: 8px;
-  border: 1px solid #cbd5e1;
-  padding: 0 10px;
-}
-
-.btn-salvar {
+  display: block;
   margin-top: 15px;
-  background: #10b981;
-  /* Verde sucesso */
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
   font-weight: bold;
-  cursor: pointer;
+  color: #374151;
+  font-size: 14px;
 }
 
-.btn-salvar:hover {
-  background: #059669;
-}
-
-/* Ajuste para o campo de seleção (Carroceria) ficar igual aos inputs de texto */
+#formCadastrarCarro input,
 #formCadastrarCarro select {
   width: 100%;
   padding: 10px;
-  /* Dá o "recheio" interno para não ficar achatado */
   margin-top: 5px;
-  /* Espaço em cima */
-  margin-bottom: 3px;
-  /* Espaço em baixo */
-  border: 1px solid #ccc;
-  /* Borda cinza clara igual aos outros */
+  border: 1px solid #d1d5db;
   border-radius: 5px;
-  /* Bordas arredondadas */
-  font-size: 16px;
-  /* Tamanho da fonte */
-  font-family: inherit;
-  /* Pega a mesma fonte do resto do site */
-  box-sizing: border-box;
-  /* Garante que não vai vazar para os lados */
-  background-color: #fff;
-  /* Fundo branco */
-  cursor: pointer;
-  /* Muda o mouse para a "mãozinha" */
 }
 
-/* Opcional: Efeito quando clica nele (igual ao input) */
-#formCadastrarCarro select:focus {
-  outline: none;
-  border-color: #2563eb;
-  /* Fica azul quando clica (mesma cor do seu botão) */
+.btn-salvar {
+  width: 100%;
+  background-color: #10b981;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 25px;
+}
+
+.fechar-modal {
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #9ca3af;
 }

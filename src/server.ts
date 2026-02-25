@@ -98,3 +98,92 @@ app.put('/carros/:id', (req, res) => {
         res.status(200).json({ mensagem: 'Carro atualizado com sucesso!' });
     });
 });
+
+// =========================================================
+// ROTAS PARA CLIENTES (A nova "cozinha" para os clientes)
+// =========================================================
+
+// ---------------------------------------------------------
+// Rota para BUSCAR todos os clientes (GET)
+// ---------------------------------------------------------
+app.get('/clientes', (req, res) => {
+    const comandoSql = 'SELECT * FROM clientes';
+
+    conexao.query(comandoSql, (erro, resultados) => {
+        if (erro) {
+            console.error('Erro ao buscar os clientes da JCar:', erro);
+            return res.status(500).json({ mensagem: 'Erro ao buscar os clientes no banco.' });
+        }
+        res.status(200).json(resultados);
+    });
+});
+
+// ---------------------------------------------------------
+// Rota para CADASTRAR um novo cliente (POST)
+// ---------------------------------------------------------
+app.post('/clientes', (req, res) => {
+    // 1. Pegamos os dados do front-end
+    const { nome, documento, data_nascimento, telefone, email, endereco, data_ultima_compra, veiculo_comprado } = req.body;
+
+    // Tratamento rápido: Se a data vier vazia do HTML (""), transformamos em 'null' para o MySQL não reclamar
+    const nasc = data_nascimento ? data_nascimento : null;
+    const ultimaCompra = data_ultima_compra ? data_ultima_compra : null;
+
+    // 2. Montamos o comando SQL
+    const comandoSql = `INSERT INTO clientes (nome, documento, data_nascimento, telefone, email, endereco, data_ultima_compra, veiculo_comprado) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    // 3. Executamos no banco
+    conexao.query(comandoSql, [nome, documento, nasc, telefone, email, endereco, ultimaCompra, veiculo_comprado], (erro, resultado) => {
+        if (erro) {
+            console.error('Erro ao cadastrar cliente:', erro);
+            return res.status(500).json({ mensagem: 'Erro ao cadastrar o cliente no banco de dados.' });
+        }
+        res.status(201).json({ mensagem: 'Cliente JCar cadastrado com sucesso! 👤' });
+    });
+});
+
+// ---------------------------------------------------------
+// Rota para ATUALIZAR (Editar) um cliente existente (PUT)
+// ---------------------------------------------------------
+app.put('/clientes/:id', (req, res) => {
+    // 1. Pegamos o ID na URL e os dados no corpo (body)
+    const idDoCliente = req.params.id;
+    const { nome, documento, data_nascimento, telefone, email, endereco, data_ultima_compra, veiculo_comprado } = req.body;
+
+    // Tratamento de datas vazias
+    const nasc = data_nascimento ? data_nascimento : null;
+    const ultimaCompra = data_ultima_compra ? data_ultima_compra : null;
+
+    // 2. Montamos o comando SQL
+    const comandoSql = `UPDATE clientes SET nome = ?, documento = ?, data_nascimento = ?, telefone = ?, email = ?, endereco = ?, data_ultima_compra = ?, veiculo_comprado = ? WHERE id = ?`;
+
+    // 3. Executamos no banco
+    conexao.query(comandoSql, [nome, documento, nasc, telefone, email, endereco, ultimaCompra, veiculo_comprado, idDoCliente], (erro, resultados) => {
+        if (erro) {
+            console.error('❌ Erro ao atualizar o cliente:', erro);
+            return res.status(500).json({ mensagem: 'Erro ao atualizar o cliente no banco.' });
+        }
+        res.status(200).json({ mensagem: 'Cliente atualizado com sucesso!' });
+    });
+});
+
+// ---------------------------------------------------------
+// Rota para DELETAR um cliente do banco de dados (DELETE)
+// ---------------------------------------------------------
+app.delete('/clientes/:id', (req, res) => {
+    // 1. Pegamos o ID na URL
+    const idDoCliente = req.params.id;
+
+    // 2. Comando SQL
+    const comandoSql = 'DELETE FROM clientes WHERE id = ?';
+
+    // 3. Executando no banco
+    conexao.query(comandoSql, [idDoCliente], (erro, resultados) => {
+        if (erro) {
+            console.error('❌ Erro ao deletar o cliente:', erro);
+            return res.status(500).json({ mensagem: 'Erro ao deletar o cliente no banco.' });
+        }
+        res.status(200).json({ mensagem: 'Cliente excluído com sucesso!' });
+    });
+});

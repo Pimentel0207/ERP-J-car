@@ -194,22 +194,35 @@ inputBusca.addEventListener('input', () => {
 
 const filtroPreco = document.getElementById('filtroPreco');
 
+const filtroModelo = document.getElementById('filtroModelo');
+
 function aplicarFiltros() {
-    const faixaPreco = filtroPreco.value;
+    const termoBusca = document.getElementById('inputBusca').value.toLowerCase();
+    const termoModelo = filtroModelo.value.toLowerCase();
+    const faixaPreco = document.getElementById('filtroPreco').value;
+
     const linhas = document.querySelectorAll('#corpoTabelaCarros tr');
 
     linhas.forEach(linha => {
-        // Pegamos o valor da coluna Preço (6ª coluna - índice 5)
-        // Removemos pontos e trocamos vírgula por ponto para o JS entender como número
+        const marca = linha.cells[1].textContent.toLowerCase();
+        const modelo = linha.cells[2].textContent.toLowerCase();
         const precoTexto = linha.cells[5].textContent.replace(/\./g, '').replace(',', '.');
         const preco = parseFloat(precoTexto);
 
+        // Regra 1: Busca Geral (Marca ou Modelo)
+        const bateBusca = marca.includes(termoBusca) || modelo.includes(termoBusca);
+
+        // Regra 2: Filtro específico de Modelo
+        const bateModelo = modelo.includes(termoModelo);
+
+        // Regra 3: Filtro de Preço
         let batePreco = true;
         if (faixaPreco === "300000") batePreco = preco <= 300000;
         else if (faixaPreco === "600000") batePreco = preco > 300000 && preco <= 600000;
         else if (faixaPreco === "acima") batePreco = preco > 600000;
 
-        if (batePreco) {
+        // Só mostra se passar em TODAS as regras
+        if (bateBusca && bateModelo && batePreco) {
             linha.style.display = "";
         } else {
             linha.style.display = "none";
@@ -217,4 +230,6 @@ function aplicarFiltros() {
     });
 }
 
-filtroPreco.addEventListener('change', aplicarFiltros);
+// Adiciona o evento para o novo campo
+filtroModelo.addEventListener('input', aplicarFiltros);
+

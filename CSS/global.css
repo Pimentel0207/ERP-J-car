@@ -1,0 +1,199 @@
+/* ==========================================
+   J-CAR GLOBAL STYLES (Versão Unificada)
+   ========================================== */
+
+/* 1. RESET E FUNDO */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f3f4f6;
+}
+
+/* 2. TOPO (LOGO) */
+.logo-wrapper {
+    background-color: #2d4475;
+    padding: 15px 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    height: 50px;
+    display: block;
+}
+
+/* 3. ESTRUTURA DE LAYOUT */
+.layout {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    align-items: flex-start;
+}
+
+/* 4. SIDEBAR DE FILTROS (ESTILO MODERNO) */
+/* Unificando as classes das duas telas */
+.col-filtro,
+.filtro2 {
+    width: 280px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 25px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+}
+
+.table-filtro,
+.filtro {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Título "Filtros" com linha azul de destaque */
+.filtroT th,
+.tfiltro th {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    text-align: left;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #2563eb;
+    letter-spacing: -0.5px;
+}
+
+/* Labels dos campos em caixa alta */
+.pop {
+    font-weight: 600;
+    color: #4b5563;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    /* REMOVIDO: display: block e padding-top fixo */
+
+    /* ADICIONADO: Garante que o texto alinhe verticalmente ao meio da linha */
+    vertical-align: middle;
+    padding: 10px 5px 0 0;
+    /* Ajuste fino de respiro */
+    white-space: nowrap;
+    /* Impede que o nome do filtro quebre em duas linhas */
+}
+
+/* Inputs e Selects estilizados */
+.table-filtro input,
+.filtro input,
+.table-filtro select,
+.filtro select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: #f9fafb;
+    font-size: 14px;
+    margin-top: 8px;
+    box-sizing: border-box;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.table-filtro input:focus,
+.filtro input:focus {
+    border-color: #2563eb;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    outline: none;
+}
+
+/* 5. TABELA PADRÃO "CARD" (CORRIGIDO) */
+
+/* O Container (A caixa branca) */
+/* No Clientes você usa a div .col-tabela, no Produtos a tabela está solta */
+.col-tabela,
+.layout>.table {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    /* Padding no container para criar o respiro */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: left;
+}
+
+/* Cabeçalho Azul */
+.table th {
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 15px 10px;
+    font-weight: 600;
+}
+
+/* Arredondamento superior das quinas azuis */
+.table th:first-child,
+.i1 {
+    border-top-left-radius: 8px;
+}
+
+.table th:last-child,
+.i2 {
+    border-top-right-radius: 8px;
+}
+
+/* Corpo da Tabela */
+.table td {
+    padding: 15px 10px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+}
+
+.table tr:hover td {
+    background-color: #f9fafb;
+}
+
+/* 6. MODAIS E BOTÕES */
+.modal-fundo {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-conteudo {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.btn-salvar {
+    width: 100%;
+    background-color: #10b981;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 25px;
+}
+
+.botao-voltar {
+    display: inline-block;
+    margin-top: 20px;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+}

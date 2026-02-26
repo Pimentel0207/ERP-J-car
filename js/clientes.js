@@ -7,9 +7,34 @@ const btnFechar = document.getElementById('btnFecharModal');
 const form = document.getElementById('formCadastrarCliente');
 
 let idClienteSendoEditado = null;
+let todosOsClientes = []; // NOVA: Memória para guardar os dados do banco
+
+// Elementos dos Filtros (IDs que estão no seu HTML)
+const inputNome = document.getElementById('filtroNome');
+const inputDoc = document.getElementById('filtroDoc');
 
 // ==========================================
-// 2. MODAL (Abrir e Fechar)
+// 2. EVENTOS DE FILTRO (Tempo Real)
+// ==========================================
+inputNome.addEventListener('input', filtrarClientes);
+inputDoc.addEventListener('input', filtrarClientes);
+
+function filtrarClientes() {
+    const termoNome = inputNome.value.toLowerCase();
+    const termoDoc = inputDoc.value.toLowerCase();
+
+    // Filtra a lista guardada na memória
+    const filtrados = todosOsClientes.filter(cliente => {
+        const nomeBate = cliente.nome.toLowerCase().includes(termoNome);
+        const docBate = cliente.documento.toLowerCase().includes(termoDoc);
+        return nomeBate && docBate;
+    });
+
+    renderizarTabela(filtrados); // Desenha apenas os que sobraram
+}
+
+// ==========================================
+// 3. MODAL (Abrir e Fechar)
 // ==========================================
 btnAbrir.onclick = () => {
     idClienteSendoEditado = null;
@@ -22,14 +47,13 @@ btnFechar.onclick = () => {
 };
 
 // ==========================================
-// 3. PREPARAR EDIÇÃO
+// 4. PREPARAR EDIÇÃO
 // ==========================================
 function prepararEdicao(id, nome, documento, data_nascimento, telefone, email, endereco, data_ultima_compra, veiculo_comprado) {
     idClienteSendoEditado = id;
 
     document.getElementById('cadNome').value = nome;
     document.getElementById('cadDoc').value = documento;
-    // O banco devolve a data num formato ISO longo. Precisamos pegar só a parte "YYYY-MM-DD" pro input type="date"
     document.getElementById('cadNascimento').value = data_nascimento ? data_nascimento.split('T')[0] : '';
     document.getElementById('cadTelefone').value = telefone || '';
     document.getElementById('cadEmail').value = email || '';
@@ -41,7 +65,7 @@ function prepararEdicao(id, nome, documento, data_nascimento, telefone, email, e
 }
 
 // ==========================================
-// 4. SALVAR NO BANCO (POST ou PUT)
+// 5. SALVAR NO BANCO (POST ou PUT)
 // ==========================================
 form.addEventListener('submit', async (evento) => {
     evento.preventDefault();
@@ -88,56 +112,53 @@ form.addEventListener('submit', async (evento) => {
 });
 
 // ==========================================
-// 5. CARREGAR CLIENTES (GET)
+// 6. CARREGAR E RENDERIZAR CLIENTES
 // ==========================================
 async function carregarClientes() {
     try {
         const resposta = await fetch('http://localhost:3000/clientes');
-        const clientesDoBanco = await resposta.json();
-
-        const corpoTabela = document.getElementById('corpoTabelaClientes');
-        corpoTabela.innerHTML = '';
-
-        clientesDoBanco.forEach(cliente => {
-            const linha = document.createElement('tr');
-
-            // Formatando datas para o formato brasileiro (DD/MM/YYYY)
-            const formataData = (dataSql) => {
-                if (!dataSql) return '—';
-                const dataObj = new Date(dataSql);
-                // Ajuste de fuso horário simples
-                dataObj.setMinutes(dataObj.getMinutes() + dataObj.getTimezoneOffset());
-                return dataObj.toLocaleDateString('pt-BR');
-            };
-
-            const dataNasc = formataData(cliente.data_nascimento);
-            const dataCompra = formataData(cliente.data_ultima_compra);
-
-            linha.innerHTML = `
-                <td style="font-weight: bold;">${cliente.nome}</td>
-                <td>${cliente.documento}</td>
-                <td>${dataNasc}</td>
-                <td>${cliente.telefone || '-'}</td>
-                <td>${cliente.email || '-'}</td>
-                <td>${cliente.endereco || '-'}</td>
-                <td>${dataCompra}</td>
-                <td>${cliente.veiculo_comprado || '-'}</td>
-                
-                <td><button onclick="prepararEdicao(${cliente.id}, '${cliente.nome}', '${cliente.documento}', '${cliente.data_nascimento || ''}', '${cliente.telefone || ''}', '${cliente.email || ''}', '${cliente.endereco || ''}', '${cliente.data_ultima_compra || ''}', '${cliente.veiculo_comprado || ''}')" style="background:#f59e0b; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Editar</button></td>
-                
-                <td><button onclick="deletarCliente(${cliente.id})" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Excluir</button></td>
-            `;
-
-            corpoTabela.appendChild(linha);
-        });
-
+        todosOsClientes = await resposta.json(); // Guarda o resultado na variável global
+        renderizarTabela(todosOsClientes); // Desenha a tabela completa no início
     } catch (erro) {
         console.error('Erro ao carregar os clientes:', erro);
     }
 }
 
+function renderizarTabela(lista) {
+    const corpoTabela = document.getElementById('corpoTabelaClientes');
+    corpoTabela.innerHTML = '';
+
+    lista.forEach(cliente => {
+        const linha = document.createElement('tr');
+
+        const formataData = (dataSql) => {
+            if (!dataSql) return '—';
+            const dataObj = new Date(dataSql);
+            dataObj.setMinutes(dataObj.getMinutes() + dataObj.getTimezoneOffset());
+            return dataObj.toLocaleDateString('pt-BR');
+        };
+
+        linha.innerHTML = `
+            <td style="font-weight: bold;">${cliente.nome}</td>
+            <td>${cliente.documento}</td>
+            <td>${formataData(cliente.data_nascimento)}</td>
+            <td>${cliente.telefone || '-'}</td>
+            <td>${cliente.email || '-'}</td>
+            <td>${cliente.endereco || '-'}</td>
+            <td>${formataData(cliente.data_ultima_compra)}</td>
+            <td>${cliente.veiculo_comprado || '-'}</td>
+            
+            <td><button onclick="prepararEdicao(${cliente.id}, '${cliente.nome}', '${cliente.documento}', '${cliente.data_nascimento || ''}', '${cliente.telefone || ''}', '${cliente.email || ''}', '${cliente.endereco || ''}', '${cliente.data_ultima_compra || ''}', '${cliente.veiculo_comprado || ''}')" style="background:#f59e0b; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Editar</button></td>
+            
+            <td><button onclick="deletarCliente(${cliente.id})" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Excluir</button></td>
+        `;
+
+        corpoTabela.appendChild(linha);
+    });
+}
+
 // ==========================================
-// 6. EXCLUIR CLIENTE (DELETE)
+// 7. EXCLUIR CLIENTE
 // ==========================================
 async function deletarCliente(id) {
     if (confirm("Tem certeza que deseja excluir este cliente?")) {
@@ -153,5 +174,4 @@ async function deletarCliente(id) {
     }
 }
 
-// Carrega os clientes ao abrir a página
 window.onload = carregarClientes;

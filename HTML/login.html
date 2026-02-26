@@ -4,41 +4,35 @@
 <head>
   <meta charset="UTF-8">
   <title>Login - J-Car</title>
-  <link rel="stylesheet" href="../css/login.css">
+  <link rel="stylesheet" href="../CSS/global.css">
 </head>
 
-<body>
+<body class="tela-central bg-imagem">
 
-  <div class="login-container">
+  <div class="card-vidro auth">
 
-    <!-- Logo -->
     <img src="../fotos/logo.png" alt="Logo J-Car" class="logo">
 
-    <!-- Card de vidro -->
-    <div class="login-card">
+    <h2>Acesso ao Sistema</h2>
+    <p class="sub">Entre com suas credenciais</p>
 
-      <h2>Acesso ao Sistema</h2>
-      <p class="sub">Entre com suas credenciais</p>
+    <form>
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="Digite seu e-mail" required>
 
-      <input type="checkbox" id="login" hidden>
+      <label for="password">Senha</label>
+      <input type="password" id="password" placeholder="Digite sua senha" required>
 
-      <form>
+      <button type="submit" class="btn-acao">Entrar</button>
 
-        <label for="email">E-mail</label>
-        <input type="email" id="email" placeholder="Digite seu e-mail" required>
+      <p class="erro" style="display:none; color: red;">E-mail ou senha inválidos</p>
 
-        <label for="password">Senha</label>
-        <input type="password" id="password" placeholder="Digite sua senha" required>
+      <a href="signup.html" class="auth-link">Não tem uma conta? Criar conta</a>
+    </form>
 
-        <label for="login" class="btn-fake">Entrar</label>
 
-        <p class="erro">E-mail ou senha inválidos</p>
-        <a href="signup.html" class="signup-link">Criar conta</a>
-
-      </form>
-
-    </div>
   </div>
+
 
   <script src="../js/login.js"></script>
 

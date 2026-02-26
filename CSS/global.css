@@ -197,3 +197,134 @@ body {
     text-decoration: none;
     font-weight: bold;
 }
+
+/* ==========================================
+   7. TELAS CENTRALIZADAS (LOGIN, SIGNUP E MENU)
+   ========================================== */
+
+/* Classes para o <body> dessas páginas */
+.tela-central {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.bg-imagem {
+    background-image: url("../fotos/fundo1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Os "Cards" flutuantes */
+.card-vidro {
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.25);
+}
+
+/* Efeito Vidro Transparente (Login e Signup) */
+.card-vidro.auth {
+    width: 340px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* Efeito Vidro Sólido (Menu) */
+.card-vidro.menu {
+    width: 320px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+}
+
+/* Ajuste do logo para não conflitar com o Topo do Estoque */
+.card-vidro .logo {
+    height: auto;
+    max-width: 200px;
+    margin: 0 auto 20px auto;
+}
+
+/* Tipografia dos Cards */
+.card-vidro h2,
+.card-vidro h1 {
+    margin: 0;
+    color: #111827;
+}
+
+.card-vidro .sub {
+    margin: 6px 0 20px;
+    font-size: 14px;
+    color: #111827;
+}
+
+/* Formulários de Auth */
+.card-vidro form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card-vidro label {
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.card-vidro input {
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    padding: 0 10px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* Botões Unificados (Login, Signup e Menu) */
+.btn-acao {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    border-radius: 10px;
+    background: #2563eb;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    transition: 0.3s;
+    margin-top: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.btn-acao:hover {
+    background: #1d4ed8;
+}
+
+/* Botão de Sair do Menu */
+.btn-acao.sair {
+    background: #dc2626;
+}
+
+.btn-acao.sair:hover {
+    background: #b91c1c;
+}
+
+/* Links extras (Esqueci a senha, Criar conta) */
+.auth-link {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #111827;
+    text-decoration: none;
+    display: block;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}

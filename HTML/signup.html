@@ -4,49 +4,39 @@
 <head>
   <meta charset="UTF-8">
   <title>Criar Conta - J-Car</title>
-  <link rel="stylesheet" href="../css/signup.css">
+  <link rel="stylesheet" href="../CSS/global.css">
 </head>
 
-<body>
+<body class="tela-central bg-imagem">
 
-  <div class="signup-container">
+  <div class="card-vidro auth">
 
-    <!-- Logo -->
     <img src="../fotos/logo.png" alt="Logo J-Car" class="logo">
 
-    <!-- Card de vidro -->
-    <div class="signup-card">
+    <h2>Criar Conta</h2>
+    <p class="sub">Crie sua conta para acessar o sistema</p>
 
-      <h2>Criar Conta</h2>
-      <p class="sub">Crie sua conta para acessar o sistema</p>
+    <form>
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="Digite seu e-mail" required>
 
-      <input type="checkbox" id="signup" hidden>
+      <label for="password">Senha</label>
+      <input type="password" id="password" placeholder="Digite sua senha" required>
 
-      <form>
+      <label for="confirm-password">Confirmar Senha</label>
+      <input type="password" id="confirm-password" placeholder="Confirme sua senha" required>
 
-        <label for="email">E-mail</label>
-        <input type="email" id="email" placeholder="Digite seu e-mail" required>
+      <button type="submit" class="btn-acao">Criar Conta</button>
 
-        <label for="password">Senha</label>
-        <input type="password" id="password" placeholder="Digite sua senha" required>
+      <p class="erro" style="display:none; color: red;">As senhas não conferem</p>
+      <p class="sucesso" style="display:none; color: green;">Conta criada com sucesso!</p>
 
-        <label for="confirm-password">Confirmar Senha</label>
-        <input type="password" id="confirm-password" placeholder="Confirme sua senha" required>
+      <a href="login.html" class="auth-link">Já tem uma conta? Faça login</a>
+    </form>
 
-        <label for="signup" class="btn-fake" id="btn-signup">Criar Conta</label>
-
-        <p class="erro">As senhas não conferem</p>
-        <p class="sucesso">Conta criada com sucesso!</p>
-
-        <a href="login.html" class="login-link">Já tem uma conta? Faça login</a>
-
-      </form>
-
-    </div>
   </div>
 
   <script src="../js/signup.js"></script>
-
 </body>
 
 </html>

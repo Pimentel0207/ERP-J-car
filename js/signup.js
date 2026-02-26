@@ -1,11 +1,13 @@
 const email = document.getElementById("email");
 const password = document.getElementById("password");
 const confirmPassword = document.getElementById("confirm-password");
-const btn = document.getElementById("btn-signup");
+const form = document.querySelector("form"); // Captura o formulário
 const erro = document.querySelector(".erro");
 const sucesso = document.querySelector(".sucesso");
 
-btn.addEventListener("click", () => {
+form.addEventListener("submit", (evento) => {
+    evento.preventDefault(); // Impede a página de recarregar
+
     if (password.value !== confirmPassword.value) {
         erro.style.display = "block";
         sucesso.style.display = "none";
@@ -25,7 +27,7 @@ btn.addEventListener("click", () => {
 
     sucesso.style.display = "block";
 
-    // Clear fields after 2 seconds and redirect to login
+    // Limpa os campos após 2 segundos e manda para o login
     setTimeout(() => {
         email.value = "";
         password.value = "";

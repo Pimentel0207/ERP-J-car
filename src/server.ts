@@ -337,3 +337,35 @@ app.post('/vendas', (req, res) => {
         });
     });
 });
+
+// ---------------------------------------------------------
+// 4. HISTÓRICO DE VENDAS (Cruza Dados de 3 Tabelas)
+// ---------------------------------------------------------
+app.get('/vendas', (req, res) => {
+    // O comando JOIN une a tabela VENDAS com CLIENTES e CARROS
+    const sql = `
+        SELECT 
+            v.id AS venda_id,
+            v.valor_total,
+            v.condicao_pagamento,
+            v.valor_entrada,
+            v.qtd_parcelas,
+            v.data_venda,
+            c.nome AS cliente_nome,
+            car.marca,
+            car.modelo,
+            car.ano
+        FROM vendas v
+        JOIN clientes c ON v.cliente_id = c.id
+        JOIN carros car ON v.carro_id = car.id
+        ORDER BY v.data_venda DESC
+    `;
+
+    conexao.query(sql, (erro, resultados) => {
+        if (erro) {
+            console.error('Erro ao buscar histórico de vendas:', erro);
+            return res.status(500).json({ mensagem: 'Erro ao buscar histórico.' });
+        }
+        res.status(200).json(resultados);
+    });
+});

@@ -103,6 +103,17 @@ async function carregarCarros() {
 
             const precoFormatado = Number(carro.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
+            // 🚨 NOVO: VERIFICA O STATUS E CRIA A ETIQUETA VISUAL
+            const statusVisual = carro.status === 'Vendido'
+                ? '<span class="badge erro" style="font-size: 11px; padding: 5px 8px; display: inline-block;">VENDIDO</span>'
+                : '<span class="badge sucesso" style="font-size: 11px; padding: 5px 8px; display: inline-block;">DISPONÍVEL</span>';
+
+            // 🚨 NOVO: Se estiver vendido, bloqueia o botão de editar para ninguém mexer no preço de um carro que já foi faturado
+            const btnEditar = carro.status === 'Vendido'
+                ? `<button disabled style="background:#9ca3af; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:not-allowed;">Bloqueado</button>`
+                : `<button onclick="prepararEdicao(${carro.id}, '${carro.marca}', '${carro.modelo}', ${carro.ano}, ${carro.preco}, '${carro.cor}', '${carro.categoria}')" style="background:#f59e0b; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Editar</button>`;
+
+            // ATUALIZADO: Adicionada a coluna extra (td) para o Status e substituído o botão Editar padrão pela variável 'btnEditar'
             linha.innerHTML = `
                 <td class="col-img">
                     <img class="Imagem" src="../fotos/logo.png" style="opacity: 0.3;">
@@ -114,9 +125,13 @@ async function carregarCarros() {
                 <td class="valor">${precoFormatado}</td>
                 <td>${carro.cor || '-'}</td>
                 
-                <td><button onclick="prepararEdicao(${carro.id}, '${carro.marca}', '${carro.modelo}', ${carro.ano}, ${carro.preco}, '${carro.cor}', '${carro.categoria}')" style="background:#f59e0b; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Editar</button></td>
+                <td style="text-align: center;">${statusVisual}</td>
                 
-                <td><button onclick="deletarCarro(${carro.id})" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Excluir</button></td>
+                <td style="text-align: center;">${btnEditar}</td>
+                
+                <td style="text-align: center;">
+                    <button onclick="deletarCarro(${carro.id})" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Excluir</button>
+                </td>
             `;
 
             corpoTabela.appendChild(linha);

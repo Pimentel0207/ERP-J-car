@@ -269,3 +269,71 @@ app.delete('/usuarios/:id', (req, res) => {
         res.status(200).json({ mensagem: 'Acesso revogado com sucesso!' });
     });
 });
+
+// =========================================================
+// ROTAS DO MÓDULO DE VENDAS
+// =========================================================
+
+// ---------------------------------------------------------
+// 1. BUSCAR CLIENTE PELO CPF
+// ---------------------------------------------------------
+app.get('/clientes/cpf/:cpf', (req, res) => {
+    const cpfDoCliente = req.params.cpf;
+
+    // Procura exatamente o cliente que tem esse documento
+    conexao.query('SELECT * FROM clientes WHERE documento = ?', [cpfDoCliente], (erro, resultados: any[]) => {
+        if (erro) {
+            return res.status(500).json({ mensagem: 'Erro ao buscar no banco.' });
+        }
+        if (resultados.length === 0) {
+            return res.status(404).json({ mensagem: 'Cliente não encontrado. Cadastre-o primeiro!' });
+        }
+        // Se achou, devolve os dados do cliente
+        res.status(200).json(resultados[0]);
+    });
+});
+
+// ---------------------------------------------------------
+// 2. BUSCAR APENAS CARROS "DISPONÍVEIS" (Para o select)
+// ---------------------------------------------------------
+app.get('/carros/disponiveis', (req, res) => {
+    // Repare no "WHERE status = 'Disponível'". Não queremos vender carro já vendido!
+    conexao.query("SELECT * FROM carros WHERE status = 'Disponível'", (erro, resultados) => {
+        if (erro) {
+            return res.status(500).json({ mensagem: 'Erro ao buscar o estoque.' });
+        }
+        res.status(200).json(resultados);
+    });
+});
+
+// ---------------------------------------------------------
+// 3. REGISTRAR A VENDA (O coração do sistema)
+// ---------------------------------------------------------
+app.post('/vendas', (req, res) => {
+    // 1. Recebemos todos os dados do HTML
+    const { cliente_id, carro_id, valor_total, condicao_pagamento, valor_entrada, qtd_parcelas, nome_carro } = req.body;
+
+    // 2. Comando para registrar a venda financeira
+    const sqlVenda = `INSERT INTO vendas (cliente_id, carro_id, valor_total, condicao_pagamento, valor_entrada, qtd_parcelas) 
+                      VALUES (?, ?, ?, ?, ?, ?)`;
+
+    conexao.query(sqlVenda, [cliente_id, carro_id, valor_total, condicao_pagamento, valor_entrada, qtd_parcelas], (erro, resultado) => {
+        if (erro) {
+            console.error('Erro na venda:', erro);
+            return res.status(500).json({ mensagem: 'Erro ao processar a venda.' });
+        }
+
+        // 3. Se a venda deu certo, tiramos o carro do estoque (Mudamos o status)
+        conexao.query("UPDATE carros SET status = 'Vendido' WHERE id = ?", [carro_id], (erroCarro) => {
+            if (erroCarro) console.error('Erro ao atualizar status do carro.');
+
+            // 4. Atualizamos a ficha do cliente com a data de hoje e o carro que ele comprou
+            conexao.query("UPDATE clientes SET data_ultima_compra = NOW(), veiculo_comprado = ? WHERE id = ?", [nome_carro, cliente_id], (erroCliente) => {
+                if (erroCliente) console.error('Erro ao atualizar cliente.');
+
+                // Mágica concluída!
+                res.status(201).json({ mensagem: '🎉 Venda concluída com sucesso! Veículo baixado do estoque.' });
+            });
+        });
+    });
+});

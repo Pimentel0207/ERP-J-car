@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Nova Venda - J-Car</title>
+
     <link rel="stylesheet" href="../CSS/global.css">
 </head>
 
@@ -21,14 +22,23 @@
             <div class="sessao-venda">
                 <h3>1. Dados do Comprador</h3>
                 <div class="grid-form">
+
+                    <div class="campo" style="grid-column: 1 / -1;">
+                        <label>Selecione um Cliente Cadastrado (Opcional)</label>
+                        <select id="vendaClienteSelect">
+                            <option value="">-- Carregando clientes... --</option>
+                        </select>
+                    </div>
+
                     <div class="campo">
                         <label>CPF do Cliente</label>
                         <div style="display: flex; gap: 10px;">
-                            <input type="text" id="vendaCpf" placeholder="Digite apenas números" maxlength="11">
+                            <input type="text" id="vendaCpf" placeholder="Digite apenas números" maxlength="14">
                             <button type="button" id="btnValidarCpf"
-                                style="background: #2563eb; color: white; border: none; border-radius: 6px; padding: 0 15px; cursor: pointer; font-weight: bold;">Validar</button>
+                                style="background: #2563eb; color: white; border: none; border-radius: 6px; padding: 0 15px; cursor: pointer; font-weight: bold;">Consultar</button>
                         </div>
                     </div>
+
                     <div class="campo">
                         <label>Nome do Cliente <span id="statusScore" class="badge">Aguardando...</span></label>
                         <input type="text" id="vendaNome" placeholder="Buscando no banco..." readonly

@@ -1,7 +1,9 @@
+// 1. Captura os elementos da tela
+const nome = document.getElementById("nome"); // 🚨 NOVO CAMPO CAPTURADO
 const email = document.getElementById("email");
 const password = document.getElementById("password");
 const confirmPassword = document.getElementById("confirm-password");
-const form = document.querySelector("form");
+const form = document.getElementById("formSignup");
 const erro = document.querySelector(".erro");
 const sucesso = document.querySelector(".sucesso");
 
@@ -10,7 +12,7 @@ form.addEventListener("submit", async (evento) => {
     erro.style.display = "none";
     sucesso.style.display = "none";
 
-    // Validação básica rápida no Front-end (só para agilizar)
+    // Validação básica rápida no Front-end
     if (password.value !== confirmPassword.value) {
         erro.textContent = "As senhas não conferem";
         erro.style.display = "block";
@@ -23,6 +25,7 @@ form.addEventListener("submit", async (evento) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                nome: nome.value,     // 🚨 ENVIANDO O NOME PARA O BANCO!
                 email: email.value,
                 password: password.value
             })
@@ -34,11 +37,11 @@ form.addEventListener("submit", async (evento) => {
             sucesso.textContent = dados.mensagem;
             sucesso.style.display = "block";
 
+            // Aguarda 2 segundos e manda pro login
             setTimeout(() => {
                 window.location.href = "login.html";
             }, 2000);
         } else {
-            // Mostra o erro exato que o Backend (TypeScript) mandou
             erro.textContent = dados.mensagem;
             erro.style.display = "block";
         }

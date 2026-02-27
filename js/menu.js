@@ -10,8 +10,8 @@ if (!usuarioString) {
     // Transforma a string de volta em um objeto JavaScript
     const usuario = JSON.parse(usuarioString);
 
-    // Atualiza o subtítulo com o email do usuário
-    document.getElementById('boasVindas').textContent = `Bem-vindo(a), ${usuario.email}`;
+    // Atualiza o subtítulo com o nome do usuário
+    document.getElementById('boasVindas').textContent = `Bem-vindo(a), ${usuario.nome || usuario.email}`;
 
     // Libera o Módulo de "Gestão de Acessos" apenas para o Admin
     if (usuario.email === 'joao@evoplan.com') {

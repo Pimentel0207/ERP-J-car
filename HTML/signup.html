@@ -16,7 +16,10 @@
     <h2>Criar Conta</h2>
     <p class="sub">Crie sua conta para acessar o sistema</p>
 
-    <form>
+    <form id="formSignup">
+      <label for="nome">Nome do Usuário</label>
+      <input type="text" id="nome" placeholder="Ex: Carlos Silva" required>
+
       <label for="email">E-mail</label>
       <input type="email" id="email" placeholder="Digite seu e-mail" required>
 
@@ -28,8 +31,8 @@
 
       <button type="submit" class="btn-acao">Criar Conta</button>
 
-      <p class="erro" style="display:none; color: red;">As senhas não conferem</p>
-      <p class="sucesso" style="display:none; color: green;">Conta criada com sucesso!</p>
+      <p class="erro" style="display:none; color: red; margin-top: 10px;"></p>
+      <p class="sucesso" style="display:none; color: green; margin-top: 10px;"></p>
 
       <a href="login.html" class="auth-link">Já tem uma conta? Faça login</a>
     </form>

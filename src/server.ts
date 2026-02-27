@@ -197,29 +197,20 @@ app.delete('/clientes/:id', (req, res) => {
 // 1. CRIAR CONTA COM VALIDAÇÃO (POST /signup)
 // ---------------------------------------------------------
 app.post('/signup', (req, res) => {
-    const { email, password } = req.body;
+    // 🚨 AGORA RECEBEMOS O NOME TAMBÉM
+    const { nome, email, password } = req.body;
 
-    // VALIDAÇÃO 1: Campos vazios ou formato inválido
-    if (!email || !email.includes('@') || !email.includes('.')) {
-        return res.status(400).json({ mensagem: 'Formato de e-mail inválido.' });
-    }
+    if (!nome) return res.status(400).json({ mensagem: 'O nome é obrigatório.' });
+    if (!email || !email.includes('@') || !email.includes('.')) return res.status(400).json({ mensagem: 'Formato de e-mail inválido.' });
+    if (!password || password.length < 6) return res.status(400).json({ mensagem: 'A senha deve ter no mínimo 6 caracteres.' });
 
-    // VALIDAÇÃO 2: Segurança da senha
-    if (!password || password.length < 6) {
-        return res.status(400).json({ mensagem: 'A senha deve ter no mínimo 6 caracteres.' });
-    }
-
-    // VALIDAÇÃO 3: Verificar se o e-mail já existe no banco
     conexao.query('SELECT * FROM usuarios WHERE email = ?', [email], (erro, resultados: any[]) => {
         if (erro) return res.status(500).json({ mensagem: 'Erro ao consultar o banco.' });
+        if (resultados.length > 0) return res.status(400).json({ mensagem: 'Este e-mail já está cadastrado!' });
 
-        if (resultados.length > 0) {
-            return res.status(400).json({ mensagem: 'Este e-mail já está cadastrado!' });
-        }
-
-        // Se passou por todas as validações, salva no banco!
-        const comandoSql = 'INSERT INTO usuarios (email, senha) VALUES (?, ?)';
-        conexao.query(comandoSql, [email, password], (erro2) => {
+        // 🚨 INSERE O NOME NO BANCO DE DADOS JUNTO COM O RESTO
+        const comandoSql = 'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)';
+        conexao.query(comandoSql, [nome, email, password], (erro2) => {
             if (erro2) return res.status(500).json({ mensagem: 'Erro ao criar conta.' });
             res.status(201).json({ mensagem: 'Conta criada com sucesso!' });
         });

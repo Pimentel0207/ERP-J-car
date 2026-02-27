@@ -37,7 +37,7 @@ async function carregarVendidos() {
                     <th>Cliente</th>
                     <th>Condição</th>
                     <th>Valor Total</th>
-                    <th style="border-top-right-radius: 8px;">Lucro / Detalhes</th>
+                    <th style="border-top-right-radius: 8px; text-align: center;">Ação</th>
                 </tr>
             `;
         } else {
@@ -61,14 +61,19 @@ async function carregarVendidos() {
             const valorTotalFormatado = Number(venda.valor_total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             if (isAdmin) {
-                // Linha Completa (ADMIN)
+                // Linha Completa com Botão de Estorno (ADMIN)
                 linha.innerHTML = `
                     <td style="font-weight: bold;">${dataVenda}</td>
                     <td>${venda.marca} ${venda.modelo} (${venda.ano})</td>
                     <td>${venda.cliente_nome}</td>
                     <td style="text-transform: capitalize;">${venda.condicao_pagamento}</td>
                     <td style="color: #10b981; font-weight: bold;">${valorTotalFormatado}</td>
-                    <td><span class="badge" style="background: #2563eb;">Ver Contrato</span></td>
+                    <td style="text-align: center;">
+                        <button onclick="estornarVenda(${venda.venda_id})" 
+                                style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight: bold;">
+                            Estornar
+                        </button>
+                    </td>
                 `;
             } else {
                 // Linha Restrita (VENDEDOR COMUM)
@@ -84,6 +89,26 @@ async function carregarVendidos() {
 
     } catch (erro) {
         console.error('Erro ao carregar vendas:', erro);
+    }
+}
+
+// ==========================================
+// 3. FUNÇÃO PARA ESTORNAR VENDA
+// ==========================================
+async function estornarVenda(id) {
+    if (confirm("⚠️ ATENÇÃO: Deseja cancelar esta venda? O carro voltará para o estoque disponível.")) {
+        try {
+            const res = await fetch(`http://localhost:3000/vendas/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                alert("Venda cancelada com sucesso! O veículo retornou ao estoque.");
+                carregarVendidos(); // Recarrega a tabela na hora
+            } else {
+                alert("Erro ao estornar a venda.");
+            }
+        } catch (erro) {
+            console.error("Erro:", erro);
+            alert("Erro de comunicação com o servidor.");
+        }
     }
 }
 

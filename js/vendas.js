@@ -221,10 +221,9 @@ entradaInput.addEventListener('input', calcularMatematica);
 parcelasSelect.addEventListener('change', calcularMatematica);
 
 // ==========================================
-// 7. FINALIZAR A VENDA
+// 7. FINALIZAR A VENDA (ATUALIZADO COM VENDEDOR)
 // ==========================================
 function verificarLiberacaoVenda() {
-    // Só libera se tiver o ID do cliente real no banco! Impede venda para "Cliente Avulso" simulado.
     if (clienteSelecionado && clienteSelecionado.id !== null && carroSelecionado) {
         btnConfirmar.style.display = "block";
     } else {
@@ -233,6 +232,16 @@ function verificarLiberacaoVenda() {
 }
 
 btnConfirmar.addEventListener('click', async () => {
+    // 1. PEGA O VENDEDOR LOGADO (O crachá que criamos no login.js)
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+    if (!usuarioLogado || !usuarioLogado.id) {
+        alert("🚨 Sessão expirada ou usuário não identificado. Faça login novamente.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    // 2. MONTA O PACOTE COM O vendedor_id
     const pacoteDeVenda = {
         cliente_id: clienteSelecionado.id,
         carro_id: carroSelecionado.id,
@@ -240,7 +249,8 @@ btnConfirmar.addEventListener('click', async () => {
         condicao_pagamento: formaPagamentoSelect.value,
         valor_entrada: Number(entradaInput.value) || 0,
         qtd_parcelas: formaPagamentoSelect.value === 'avista' ? 0 : parseInt(parcelasSelect.value),
-        nome_carro: `${carroSelecionado.marca} ${carroSelecionado.modelo}`
+        nome_carro: `${carroSelecionado.marca} ${carroSelecionado.modelo}`,
+        vendedor_id: usuarioLogado.id // <-- ESSA É A CHAVE QUE ESTAVA FALTANDO!
     };
 
     try {

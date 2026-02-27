@@ -307,32 +307,25 @@ app.get('/carros/disponiveis', (req, res) => {
 });
 
 // ---------------------------------------------------------
-// 3. REGISTRAR A VENDA (O coração do sistema)
+// 3. REGISTRAR A VENDA (ATUALIZADA COM VENDEDOR)
 // ---------------------------------------------------------
 app.post('/vendas', (req, res) => {
-    // 1. Recebemos todos os dados do HTML
-    const { cliente_id, carro_id, valor_total, condicao_pagamento, valor_entrada, qtd_parcelas, nome_carro } = req.body;
+    // Agora recebemos também o vendedor_id vindo do Front-end
+    const { cliente_id, carro_id, valor_total, condicao_pagamento, valor_entrada, qtd_parcelas, nome_carro, vendedor_id } = req.body;
 
-    // 2. Comando para registrar a venda financeira
-    const sqlVenda = `INSERT INTO vendas (cliente_id, carro_id, valor_total, condicao_pagamento, valor_entrada, qtd_parcelas) 
-                      VALUES (?, ?, ?, ?, ?, ?)`;
+    const sqlVenda = `INSERT INTO vendas (cliente_id, carro_id, valor_total, condicao_pagamento, valor_entrada, qtd_parcelas, vendedor_id) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-    conexao.query(sqlVenda, [cliente_id, carro_id, valor_total, condicao_pagamento, valor_entrada, qtd_parcelas], (erro, resultado) => {
+    conexao.query(sqlVenda, [cliente_id, carro_id, valor_total, condicao_pagamento, valor_entrada, qtd_parcelas, vendedor_id], (erro, resultado) => {
         if (erro) {
             console.error('Erro na venda:', erro);
             return res.status(500).json({ mensagem: 'Erro ao processar a venda.' });
         }
 
-        // 3. Se a venda deu certo, tiramos o carro do estoque (Mudamos o status)
-        conexao.query("UPDATE carros SET status = 'Vendido' WHERE id = ?", [carro_id], (erroCarro) => {
-            if (erroCarro) console.error('Erro ao atualizar status do carro.');
-
-            // 4. Atualizamos a ficha do cliente com a data de hoje e o carro que ele comprou
-            conexao.query("UPDATE clientes SET data_ultima_compra = NOW(), veiculo_comprado = ? WHERE id = ?", [nome_carro, cliente_id], (erroCliente) => {
-                if (erroCliente) console.error('Erro ao atualizar cliente.');
-
-                // Mágica concluída!
-                res.status(201).json({ mensagem: '🎉 Venda concluída com sucesso! Veículo baixado do estoque.' });
+        // Baixa no estoque e atualização do cliente (Mantemos o que já funcionava)
+        conexao.query("UPDATE carros SET status = 'Vendido' WHERE id = ?", [carro_id], () => {
+            conexao.query("UPDATE clientes SET data_ultima_compra = NOW(), veiculo_comprado = ? WHERE id = ?", [nome_carro, cliente_id], () => {
+                res.status(201).json({ mensagem: '🎉 Venda concluída e vendedor comissionado!' });
             });
         });
     });
@@ -367,5 +360,81 @@ app.get('/vendas', (req, res) => {
             return res.status(500).json({ mensagem: 'Erro ao buscar histórico.' });
         }
         res.status(200).json(resultados);
+    });
+});
+
+// ---------------------------------------------------------
+// 5. ROTA DE COMISSÕES (Para o Ranking e Pagamentos)
+// ---------------------------------------------------------
+app.get('/comissoes', (req, res) => {
+    // Agrupa as vendas por vendedor e calcula 1% de comissão
+    const sql = `
+        SELECT 
+            u.email AS vendedor,
+            u.id AS vendedor_id,
+            SUM(v.valor_total) AS total_vendido,
+            COUNT(v.id) AS qtd_vendas,
+            SUM(v.valor_total) * 0.01 AS comissao_total
+        FROM usuarios u
+        JOIN vendas v ON u.id = v.vendedor_id
+        GROUP BY u.id
+        ORDER BY total_vendido DESC
+    `;
+
+    conexao.query(sql, (erro, resultados) => {
+        if (erro) return res.status(500).json({ mensagem: 'Erro ao calcular comissões.' });
+        res.status(200).json(resultados);
+    });
+});
+// No seu server.ts
+app.get('/comissoes', (req, res) => {
+    const sql = `
+    SELECT 
+        u.email AS vendedor,
+        u.id AS vendedor_id,
+        SUM(v.valor_total) AS total_vendido,
+        SUM(v.valor_total) * 0.01 AS comissao_total
+    FROM usuarios u
+    JOIN vendas v ON u.id = v.vendedor_id
+    WHERE v.status_comissao = 'Pendente' -- MOSTRA SÓ O QUE NÃO FOI PAGO!
+    GROUP BY u.id
+`;
+    // ... restante da conexao.query
+});
+
+// ---------------------------------------------------------
+// 6. PAGAR COMISSÃO (Mudar status para 'Pago')
+// ---------------------------------------------------------
+app.put('/vendas/:id/pagar', (req, res) => {
+    const idDaVenda = req.params.id;
+    const sql = "UPDATE vendas SET status_comissao = 'Pago' WHERE id = ?";
+
+    conexao.query(sql, [idDaVenda], (erro) => {
+        if (erro) return res.status(500).json({ mensagem: 'Erro ao pagar comissão.' });
+        res.status(200).json({ mensagem: 'Comissão marcada como Paga! 💸' });
+    });
+});
+
+// ---------------------------------------------------------
+// 7. EXCLUIR/ESTORNAR VENDA (Devolve o carro ao estoque)
+// ---------------------------------------------------------
+app.delete('/vendas/:id', (req, res) => {
+    const idDaVenda = req.params.id;
+
+    // 1. Primeiro, precisamos saber QUAL era o carro dessa venda
+    conexao.query('SELECT carro_id FROM vendas WHERE id = ?', [idDaVenda], (erro, resultados: any[]) => {
+        if (erro || resultados.length === 0) return res.status(500).json({ mensagem: 'Venda não encontrada.' });
+
+        const idDoCarro = resultados[0].carro_id;
+
+        // 2. Voltamos o status do carro para 'Disponível'
+        conexao.query("UPDATE carros SET status = 'Disponível' WHERE id = ?", [idDoCarro], (erroCarro) => {
+
+            // 3. Agora sim, excluímos o registro da venda
+            conexao.query('DELETE FROM vendas WHERE id = ?', [idDaVenda], (erroVenda) => {
+                if (erroVenda) return res.status(500).json({ mensagem: 'Erro ao deletar venda.' });
+                res.status(200).json({ mensagem: 'Venda estornada! O carro voltou ao estoque. 🚗↩️' });
+            });
+        });
     });
 });

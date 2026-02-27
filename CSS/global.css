@@ -418,3 +418,127 @@ body {
 .badge.erro {
     background-color: #ef4444;
 }
+
+/* ==========================================
+   9. MODAIS DE CADASTRO (CLIENTES E PRODUTOS)
+   ========================================== */
+
+/* Melhorando a caixa do modal */
+.modal-conteudo {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    /* Um pouco mais arredondado para modernizar */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
+    /* Limita o tamanho para não esticar demais na tela */
+    position: relative;
+}
+
+/* Cabeçalho do Modal (Título e X) */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #111827;
+    font-size: 22px;
+}
+
+.btn-fechar-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: 0.2s;
+    line-height: 1;
+}
+
+.btn-fechar-modal:hover {
+    color: #ef4444;
+    /* Fica vermelho ao passar o mouse */
+}
+
+/* Organizando os campos em 2 colunas */
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Para campos grandes, como Nome ou Endereço, ocupar a linha toda */
+.modal-grid .linha-completa {
+    grid-column: span 2;
+}
+
+/* Estilo dos Inputs do Modal */
+.modal-conteudo label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.modal-conteudo input,
+.modal-conteudo select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: #f9fafb;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.modal-conteudo input:focus,
+.modal-conteudo select:focus {
+    border-color: #2563eb;
+    background-color: #ffffff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Rodapé com os botões Salvar / Cancelar */
+.modal-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 20px;
+}
+
+.btn-cancelar {
+    flex: 1;
+    background-color: #f3f4f6;
+    color: #4b5563;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cancelar:hover {
+    background-color: #e5e7eb;
+}
+
+/* Ajustando o btn-salvar que você já tinha para caber bonito no footer */
+.modal-footer .btn-salvar {
+    margin-top: 0;
+    /* Remove a margem antiga */
+    flex: 2;
+    /* O botão de salvar fica mais largo que o de cancelar */
+    border-radius: 6px;
+}

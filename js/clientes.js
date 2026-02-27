@@ -46,6 +46,11 @@ btnFechar.onclick = () => {
     modal.style.display = "none";
 };
 
+// 👉 NOVO: Lógica do botão "Cancelar" (Cinza)
+document.getElementById('btnCancelarCliente').addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
 // ==========================================
 // 4. PREPARAR EDIÇÃO
 // ==========================================

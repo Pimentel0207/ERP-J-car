@@ -21,6 +21,11 @@ btnFechar.onclick = () => {
     modal.style.display = "none";
 };
 
+// 👉 NOVO: Lógica do botão "Cancelar" (Cinza)
+document.getElementById('btnCancelarCarro').addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
 // ==========================================
 // 3. FUNÇÃO PARA PREPARAR A EDIÇÃO (Botão Amarelo)
 // ==========================================

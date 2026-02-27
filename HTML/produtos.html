@@ -110,36 +110,58 @@
 
     <div id="modalCadastro" class="modal-fundo">
         <div class="modal-conteudo">
-            <span id="btnFecharModal" class="fechar-modal">&times;</span>
-            <h2 style="margin-top: 0; color: #111827;">Cadastrar Novo Veículo</h2>
+
+            <div class="modal-header">
+                <h2>Cadastrar Novo Veículo</h2>
+                <button id="btnFecharModal" class="btn-fechar-modal">&times;</button>
+            </div>
 
             <form id="formCadastrarCarro">
-                <label>Marca:</label>
-                <input type="text" id="cadMarca" required placeholder="Ex: Porsche">
+                <div class="modal-grid">
 
-                <label>Modelo:</label>
-                <input type="text" id="cadModelo" required placeholder="Ex: 911 Carrera">
+                    <div class="linha-completa">
+                        <label>Marca:</label>
+                        <input type="text" id="cadMarca" required placeholder="Ex: Porsche">
+                    </div>
 
-                <label>Carroceria:</label>
-                <select id="cadCategoria" required>
-                    <option value="SUV">SUV</option>
-                    <option value="Sedan">Sedan</option>
-                    <option value="Hatch">Hatch</option>
-                    <option value="Coupé">Coupé</option>
-                    <option value="Conversível">Conversível</option>
-                </select>
+                    <div>
+                        <label>Modelo:</label>
+                        <input type="text" id="cadModelo" required placeholder="Ex: 911 Carrera">
+                    </div>
 
-                <label>Ano:</label>
-                <input type="number" id="cadAno" required placeholder="Ex: 2026">
+                    <div>
+                        <label>Carroceria:</label>
+                        <select id="cadCategoria" required>
+                            <option value="SUV">SUV</option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="Hatch">Hatch</option>
+                            <option value="Coupé">Coupé</option>
+                            <option value="Conversível">Conversível</option>
+                        </select>
+                    </div>
 
-                <label>Preço:</label>
-                <input type="number" step="0.01" id="cadPreco" required placeholder="Ex: 850000.00">
+                    <div>
+                        <label>Ano de Fabricação:</label>
+                        <input type="number" id="cadAno" required placeholder="Ex: 2026">
+                    </div>
 
-                <label>Cor:</label>
-                <input type="text" id="cadCor" placeholder="Ex: Prata">
+                    <div>
+                        <label>Cor do Veículo:</label>
+                        <input type="text" id="cadCor" placeholder="Ex: Prata GT">
+                    </div>
 
-                <button type="submit" class="btn-salvar">Salvar Carro no Banco</button>
+                    <div class="linha-completa">
+                        <label>Preço de Venda (R$):</label>
+                        <input type="number" step="0.01" id="cadPreco" required placeholder="Ex: 850000.00">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" id="btnCancelarCarro">Cancelar</button>
+                    <button type="submit" class="btn-salvar">Salvar no Estoque</button>
+                </div>
             </form>
+
         </div>
     </div>
 

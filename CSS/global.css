@@ -10,6 +10,33 @@ body {
     background-color: #f3f4f6;
 }
 
+/* ==========================================
+   CUSTOM SCROLLBAR (Barra de Rolagem J-Car)
+   ========================================== */
+::-webkit-scrollbar {
+    width: 10px;
+    /* Largura da barra */
+}
+
+::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    /* Cor do fundo da trilha */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    /* Cor da barrinha */
+    border-radius: 10px;
+    /* Deixa ela arredondada */
+    border: 2px solid #f3f4f6;
+    /* Espaço entre a barra e a trilha */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2563eb;
+    /* Fica azul (cor da J-Car) ao passar o mouse! */
+}
+
 /* 2. TOPO (LOGO) */
 .logo-wrapper {
     background-color: #2d4475;
@@ -106,18 +133,18 @@ body {
 /* 5. TABELA PADRÃO "CARD" (CORRIGIDO) */
 
 /* O Container (A caixa branca) */
-/* No Clientes você usa a div .col-tabela, no Produtos a tabela está solta */
 .col-tabela,
 .layout>.table {
     flex: 1;
     background-color: #ffffff;
     border-radius: 8px;
     padding: 20px;
-    /* Padding no container para criar o respiro */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     border-collapse: separate;
     border-spacing: 0;
-    overflow: hidden;
+
+    /* 🚨 A MÁGICA ACONTECE AQUI: Troca o 'hidden' por 'auto' */
+    overflow-x: auto;
 }
 
 .table {
@@ -125,6 +152,9 @@ body {
     border-collapse: collapse;
     font-size: 14px;
     text-align: left;
+
+    /* 🚨 Garante que a tabela tenha um tamanho mínimo pra não espremer */
+    min-width: 900px;
 }
 
 /* Cabeçalho Azul */
@@ -133,6 +163,8 @@ body {
     color: #ffffff;
     padding: 15px 10px;
     font-weight: 600;
+    /* Evita que o título da coluna quebre em duas linhas */
+    white-space: nowrap;
 }
 
 /* Arredondamento superior das quinas azuis */
@@ -151,6 +183,8 @@ body {
     padding: 15px 10px;
     border-bottom: 1px solid #e5e7eb;
     color: #374151;
+    /* Impede que o texto (como o email) fique pulando de linha */
+    white-space: nowrap;
 }
 
 .table tr:hover td {

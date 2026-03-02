@@ -21,14 +21,14 @@ form.addEventListener("submit", async (evento) => {
         const dados = await resposta.json();
 
         if (resposta.ok) {
-            // Salva o "crachá" do usuário logado no navegador
+            // ✅ Salva no navegador
             localStorage.setItem('usuarioLogado', JSON.stringify(dados.usuario));
 
-            // Redireciona para o menu
-            window.location.href = "menu.html";
+            // ✅ A PORTA DE ENTRADA CORRETA:
+            window.location.href = "app.html";
         } else {
-            // Backend bloqueou (senha errada ou não existe)
-            erro.textContent = dados.mensagem;
+            // 🚨 FALTAVA ISSO: Mostra o erro se o usuário ou senha estiverem errados!
+            erro.textContent = dados.mensagem || "E-mail ou senha incorretos.";
             erro.style.display = "block";
         }
     } catch (error) {

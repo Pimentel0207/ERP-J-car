@@ -44,6 +44,37 @@
 
             <section id="sec-dashboard" class="secao-tela ativa">
                 <h2 class="titulo-secao">Dashboard Financeiro</h2>
+
+                <div class="dash-cards-container">
+                    <div class="dash-card border-blue">
+                        <h3 class="dash-card-titulo">Faturamento Total</h3>
+                        <div class="dash-card-valor" id="dashFaturamento">A carregar...</div>
+                    </div>
+                    <div class="dash-card border-green">
+                        <h3 class="dash-card-titulo">Veículos no Estoque</h3>
+                        <div class="dash-card-valor" id="dashEstoque">A carregar...</div>
+                    </div>
+                    <div class="dash-card border-yellow">
+                        <h3 class="dash-card-titulo">Clientes Ativos</h3>
+                        <div class="dash-card-valor" id="dashClientes">A carregar...</div>
+                    </div>
+                    <div class="dash-card border-purple">
+                        <h3 class="dash-card-titulo">Vendas Realizadas</h3>
+                        <div class="dash-card-valor" id="dashQtdVendas">A carregar...</div>
+                    </div>
+                </div>
+
+                <div class="dash-graficos-container">
+                    <div class="dash-box-grafico flex-2">
+                        <h3 class="dash-titulo-grafico">Evolução de Faturamento (Últimas Vendas)</h3>
+                        <canvas id="graficoFaturamento" height="100"></canvas>
+                    </div>
+
+                    <div class="dash-box-grafico flex-1">
+                        <h3 class="dash-titulo-grafico">Estoque por Marca</h3>
+                        <canvas id="graficoEstoque" height="200"></canvas>
+                    </div>
+                </div>
             </section>
 
             <section id="sec-vendas" class="secao-tela">
@@ -506,6 +537,8 @@
     <script src="../js/vendidos.js"></script>
     <script src="../js/comissoes.js"></script>
     <script src="../js/acessos.js"></script>
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/login.js"></script>
 
 
 </body>

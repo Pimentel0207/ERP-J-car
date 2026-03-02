@@ -450,3 +450,85 @@ body.modo-spa {
 .badge.erro {
     background-color: #ef4444;
 }
+
+/* ==========================================
+   8. MÓDULO DASHBOARD
+   ========================================== */
+
+/* Container dos Cards Superiores */
+.dash-cards-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* O Card Individual */
+.dash-card {
+    flex: 1;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* Modificadores de cor da borda lateral */
+.dash-card.border-blue {
+    border-left: 4px solid #2563eb;
+}
+
+.dash-card.border-green {
+    border-left: 4px solid #10b981;
+}
+
+.dash-card.border-yellow {
+    border-left: 4px solid #f59e0b;
+}
+
+.dash-card.border-purple {
+    border-left: 4px solid #8b5cf6;
+}
+
+/* Textos dentro do Card */
+.dash-card-titulo {
+    margin: 0 0 10px 0;
+    color: #64748b;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.dash-card-valor {
+    font-size: 22px;
+    font-weight: bold;
+    color: #0f172a;
+}
+
+/* Container dos Gráficos */
+.dash-graficos-container {
+    display: flex;
+    gap: 20px;
+}
+
+/* A Caixa Branca que segura o Gráfico */
+.dash-box-grafico {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* Tamanhos das caixas dos gráficos */
+.dash-box-grafico.flex-2 {
+    flex: 2;
+}
+
+.dash-box-grafico.flex-1 {
+    flex: 1;
+}
+
+.dash-titulo-grafico {
+    margin: 0 0 15px 0;
+    color: #0f172a;
+    font-size: 14px;
+}

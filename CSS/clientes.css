@@ -1,7 +1,0 @@
-/* Apenas o que é exclusivo dos Clientes */
-.modal-conteudo {
-  max-width: 500px;
-  position: relative;
-  max-height: 90vh;
-  overflow-y: auto;
-}

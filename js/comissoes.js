@@ -1,106 +1,195 @@
 // ==========================================
-// 1. VERIFICAR ACESSO
+// 1. VERIFICAR ACESSO (Váriaveis Únicas)
 // ==========================================
-const usuarioString = localStorage.getItem('usuarioLogado');
-if (!usuarioString) {
+const sessaoComissoes = localStorage.getItem('usuarioLogado');
+let isComissoesAdmin = false;
+let usuarioLogadoComissoes = null;
+
+if (!sessaoComissoes) {
     window.location.href = "login.html";
+} else {
+    usuarioLogadoComissoes = JSON.parse(sessaoComissoes);
+    if (usuarioLogadoComissoes.email === 'joao@evoplan.com') {
+        isComissoesAdmin = true;
+    }
 }
-const logado = JSON.parse(usuarioString);
-const isAdmin = logado.email === 'joao@evoplan.com';
 
 // ==========================================
-// 2. CARREGAR DADOS DE COMISSÃO
+// 2. MAPEANDO ELEMENTOS DA TELA
+// ==========================================
+const cabecalhoComissoes = document.querySelector('#sec-comissoes thead');
+const corpoTabelaComissoes = document.getElementById('tabelaComissoesBody');
+
+// Cards Superiores
+const cardMetaGeral = document.getElementById('cardMetaTotal');
+const cardFaturamento = document.getElementById('cardMetaAlcancada');
+const cardComissoesPendentes = document.getElementById('cardComissoesPendentes');
+
+// Toolbar
+const inputBuscaComissao = document.getElementById('buscaComissao');
+const btnPagarToolbar = document.getElementById('btnPagarComissaoToolbar');
+const btnRecarregarComissoes = document.getElementById('btnRecarregarComissoes');
+
+let todosDadosComissoes = [];
+
+// ==========================================
+// 3. BUSCA EM TEMPO REAL
+// ==========================================
+inputBuscaComissao.addEventListener('input', (evento) => {
+    const termo = evento.target.value.toLowerCase();
+
+    const filtrados = todosDadosComissoes.filter(item => {
+        return item.vendedor.toLowerCase().includes(termo);
+    });
+
+    renderizarTabelaComissoes(filtrados);
+});
+
+// ==========================================
+// 4. LÓGICA DA TOOLBAR (DAR BAIXA)
+// ==========================================
+btnPagarToolbar.addEventListener('click', async () => {
+    if (!isComissoesAdmin) {
+        alert("🔒 Acesso Negado: Apenas administradores podem dar baixa em comissões.");
+        return;
+    }
+
+    const checkboxSelecionado = document.querySelector('.check-comissao:checked');
+    if (!checkboxSelecionado) {
+        alert("⚠️ Selecione um vendedor na tabela para dar baixa nas comissões.");
+        return;
+    }
+
+    const idVendedor = checkboxSelecionado.value;
+    const nomeVendedor = checkboxSelecionado.getAttribute('data-nome');
+
+    if (confirm(`Confirmar o pagamento das comissões pendentes para ${nomeVendedor}?`)) {
+        try {
+            const res = await fetch(`http://localhost:3000/vendedores/${idVendedor}/pagar-comissoes`, { method: 'PUT' });
+            if (res.ok) {
+                alert("✅ Pagamento registrado com sucesso!");
+                carregarComissoes(); // Atualiza a tela (vai recarregar com status PAGO)
+            } else {
+                alert("❌ Erro ao processar pagamento.");
+            }
+        } catch (erro) {
+            console.error(erro);
+            alert("Erro de conexão com o servidor.");
+        }
+    }
+});
+
+btnRecarregarComissoes.addEventListener('click', () => {
+    inputBuscaComissao.value = '';
+    carregarComissoes();
+});
+
+// ==========================================
+// 5. CARREGAR E RENDERIZAR
 // ==========================================
 async function carregarComissoes() {
     try {
         const resposta = await fetch('http://localhost:3000/comissoes');
         let dados = await resposta.json();
 
-        const cabecalho = document.querySelector('thead tr');
-        const corpo = document.getElementById('corpoTabelaComissoes');
-        const resumoVendido = document.getElementById('resumoTotalVendido');
-        const resumoComissao = document.getElementById('resumoComissao');
-        const titulo = document.getElementById('tituloPagina');
-
-        corpo.innerHTML = '';
-
-        // SE FOR ADMIN, ADICIONA A COLUNA DE AÇÃO NO CABEÇALHO
-        if (isAdmin) {
-            cabecalho.innerHTML = `
-                <th style="border-top-left-radius: 8px;">Vendedor</th>
-                <th>Qtd. Vendas</th>
-                <th>Volume Total (R$)</th>
-                <th>Comissão a Receber</th>
-                <th style="border-top-right-radius: 8px; text-align: center;">Ação</th>
+        // 5.1 Monta o Cabeçalho Baseado no Perfil
+        if (isComissoesAdmin) {
+            cabecalhoComissoes.innerHTML = `
+                <tr>
+                    <th class="col-checkbox" style="width: 30px;"><input type="checkbox" disabled></th>
+                    <th>Vendedor ↕</th>
+                    <th style="text-align: center;">Qtd. Vendas ↕</th>
+                    <th>Volume Total (R$) ↕</th>
+                    <th>Comissão ↕</th>
+                    <th style="text-align: center;">Status ↕</th>
+                </tr>
             `;
-        }
-
-        // SE NÃO FOR ADMIN, FILTRA E MOSTRA SÓ O DELE
-        if (!isAdmin) {
-            dados = dados.filter(d => d.vendedor_id === logado.id);
-            titulo.textContent = "Minhas Comissões";
         } else {
-            titulo.textContent = "Ranking Geral de Comissões (Admin)";
+            cabecalhoComissoes.innerHTML = `
+                <tr>
+                    <th class="col-checkbox" style="width: 30px;"><input type="checkbox" disabled></th>
+                    <th>Vendedor ↕</th>
+                    <th style="text-align: center;">Qtd. Vendas ↕</th>
+                    <th>Volume Total (R$) ↕</th>
+                    <th>Comissão ↕</th>
+                    <th style="text-align: center;">Status ↕</th>
+                </tr>
+            `;
+            btnPagarToolbar.style.display = 'none'; // Esconde botão para vendedor
         }
 
-        let somaVendido = 0;
-        let somaComissao = 0;
+        // 5.2 Filtra se não for admin
+        if (!isComissoesAdmin) {
+            dados = dados.filter(d => d.vendedor_id === usuarioLogadoComissoes.id);
+        }
 
-        dados.forEach(item => {
-            const linha = document.createElement('tr');
-
-            const totalF = Number(item.total_vendido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            const comissaoF = Number(item.comissao_total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-            somaVendido += Number(item.total_vendido);
-            somaComissao += Number(item.comissao_total);
-
-            // CRIA O BOTÃO VERDE SE FOR ADMIN
-            let colunaAcao = isAdmin
-                ? `<td style="text-align: center;">
-                    <button onclick="pagarVendedor(${item.vendedor_id}, '${item.vendedor}')" 
-                            style="background:#10b981; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">
-                        Dar Baixa
-                    </button>
-                   </td>`
-                : '';
-
-            linha.innerHTML = `
-                <td style="font-weight: bold; color: #1f2937;">${item.vendedor}</td>
-                <td style="text-align: center;">${item.qtd_vendas}</td>
-                <td>${totalF}</td>
-                <td style="color: #10b981; font-weight: bold;">${comissaoF}</td>
-                ${colunaAcao}
-            `;
-            corpo.appendChild(linha);
-        });
-
-        // Atualiza os cards de resumo
-        resumoVendido.textContent = somaVendido.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        resumoComissao.textContent = somaComissao.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        todosDadosComissoes = dados;
+        renderizarTabelaComissoes(todosDadosComissoes);
 
     } catch (erro) {
         console.error("Erro ao carregar comissões:", erro);
     }
 }
 
-// ==========================================
-// 3. FUNÇÃO PARA DAR BAIXA (CHAMA A NOVA ROTA)
-// ==========================================
-async function pagarVendedor(id, nome) {
-    if (confirm(`Confirmar o pagamento das comissões para ${nome}? Isso zerará o relatório de pendências dele.`)) {
-        try {
-            const res = await fetch(`http://localhost:3000/vendedores/${id}/pagar-comissoes`, { method: 'PUT' });
-            if (res.ok) {
-                alert("✅ Pagamento registrado com sucesso!");
-                carregarComissoes(); // 🔄 Recarrega a tabela e limpa quem já foi pago
+function renderizarTabelaComissoes(lista) {
+    corpoTabelaComissoes.innerHTML = '';
+
+    let somaVendido = 0;
+    let somaComissoesPendentes = 0;
+
+    if (lista.length === 0) {
+        const colunasSpan = 6;
+        corpoTabelaComissoes.innerHTML = `<tr><td colspan="${colunasSpan}" style="text-align: center; padding: 20px;">Nenhuma comissão encontrada.</td></tr>`;
+    } else {
+        lista.forEach(item => {
+            const linha = document.createElement('tr');
+
+            const valorComissao = Number(item.comissao_total);
+            const totalF = Number(item.total_vendido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const comissaoF = valorComissao.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            somaVendido += Number(item.total_vendido);
+
+            // === A MÁGICA DO STATUS ACONTECE AQUI ===
+            let statusVisual = '';
+            let checkboxHtml = '';
+            let corComissao = '';
+
+            // Se o backend enviar um status_pagamento = 'Pago' OU se a comissão estiver zerada
+            if (item.status_pagamento === 'Pago' || valorComissao === 0) {
+                statusVisual = '<span class="badge" style="background-color: #10b981;">PAGO ✅</span>';
+                checkboxHtml = '<input type="checkbox" disabled title="Já pago">';
+                corComissao = '#64748b'; // Cinza para mostrar que não deve mais nada
             } else {
-                alert("❌ Erro ao processar pagamento.");
+                statusVisual = '<span class="badge" style="background-color: #f59e0b;">PENDENTE</span>';
+                // Só deixa o admin selecionar as pendentes
+                checkboxHtml = isComissoesAdmin
+                    ? `<input type="checkbox" class="check-comissao" value="${item.vendedor_id}" data-nome="${item.vendedor}">`
+                    : `<input type="checkbox" disabled>`;
+                corComissao = '#10b981'; // Verde forte
+                somaComissoesPendentes += valorComissao; // Só soma no Card o que ainda falta pagar
             }
-        } catch (erro) {
-            console.error(erro);
-        }
+
+            linha.innerHTML = `
+                <td class="col-checkbox">${checkboxHtml}</td>
+                <td style="font-weight: 600; color: #1e293b;">${item.vendedor}</td>
+                <td style="text-align: center;">${item.qtd_vendas}</td>
+                <td>${totalF}</td>
+                <td style="color: ${corComissao}; font-weight: bold;">${comissaoF}</td>
+                <td style="text-align: center;">${statusVisual}</td>
+            `;
+
+            corpoTabelaComissoes.appendChild(linha);
+        });
     }
+
+    // 5.3 Atualiza os Cards de Resumo
+    cardFaturamento.textContent = somaVendido.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    cardComissoesPendentes.textContent = somaComissoesPendentes.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    const metaDoMes = 500000;
+    cardMetaGeral.textContent = metaDoMes.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-window.onload = carregarComissoes;
+// Inicia
+carregarComissoes();

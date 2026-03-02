@@ -43,8 +43,12 @@ app.post('/carros', (req, res) => {
         res.status(201).json({ mensagem: 'Carro da JCar cadastrado com sucesso! 🚗' });
     });
 });
+// ---------------------------------------------------------
+// Rota para BUSCAR todos os carros do Estoque (Ignorando os Vendidos)
+// ---------------------------------------------------------
 app.get('/carros', (req, res) => {
-    const comandoSql = 'SELECT * FROM carros';
+    // 🚨 A Mágica: O WHERE status != 'Vendido' esconde os carros faturados!
+    const comandoSql = "SELECT * FROM carros WHERE status != 'Vendido'";
 
     conexao.query(comandoSql, (erro, resultados) => {
         if (erro) {
@@ -355,43 +359,39 @@ app.get('/vendas', (req, res) => {
 });
 
 // ---------------------------------------------------------
-// 5. MÓDULO FINANCEIRO (COMISSÕES)
+// 5. MÓDULO FINANCEIRO (COMISSÕES E RELATÓRIO)
 // ---------------------------------------------------------
 app.get('/comissoes', (req, res) => {
-    // 🚨 Aqui usamos o WHERE para trazer APENAS o que está 'Pendente'
+    // 🚨 Nova Consulta (Trás tudo: Pendente e Pago, separando os valores)
     const sql = `
         SELECT 
             u.email AS vendedor,
             u.id AS vendedor_id,
-            SUM(v.valor_total) AS total_vendido,
             COUNT(v.id) AS qtd_vendas,
-            SUM(v.valor_total) * 0.01 AS comissao_total
+            SUM(v.valor_total) AS total_vendido,
+            
+            -- Pega o status da última venda ou define se tem pendência
+            MAX(v.status_comissao) AS status_pagamento, 
+            
+            -- Soma SÓ as comissões que ainda estão Pendentes
+            SUM(CASE WHEN v.status_comissao = 'Pendente' THEN v.valor_total * 0.01 ELSE 0 END) AS comissao_total,
+            
+            -- Soma SÓ as comissões que já foram Pagas (Para histórico)
+            SUM(CASE WHEN v.status_comissao = 'Pago' THEN v.valor_total * 0.01 ELSE 0 END) AS comissao_paga
+            
         FROM usuarios u
         JOIN vendas v ON u.id = v.vendedor_id
-        WHERE v.status_comissao = 'Pendente'
         GROUP BY u.id
         ORDER BY total_vendido DESC
     `;
 
     conexao.query(sql, (erro, resultados) => {
-        if (erro) return res.status(500).json({ mensagem: 'Erro ao calcular comissões.' });
+        if (erro) {
+            console.error('Erro ao calcular comissões:', erro);
+            return res.status(500).json({ mensagem: 'Erro ao calcular comissões.' });
+        }
         res.status(200).json(resultados);
     });
-});
-// No seu server.ts
-app.get('/comissoes', (req, res) => {
-    const sql = `
-    SELECT 
-        u.email AS vendedor,
-        u.id AS vendedor_id,
-        SUM(v.valor_total) AS total_vendido,
-        SUM(v.valor_total) * 0.01 AS comissao_total
-    FROM usuarios u
-    JOIN vendas v ON u.id = v.vendedor_id
-    WHERE v.status_comissao = 'Pendente' -- MOSTRA SÓ O QUE NÃO FOI PAGO!
-    GROUP BY u.id
-`;
-    // ... restante da conexao.query
 });
 
 // ---------------------------------------------------------

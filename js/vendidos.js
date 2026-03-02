@@ -1,14 +1,14 @@
 // ==========================================
-// 1. VERIFICAR QUEM ESTÁ LOGADO
+// 1. VERIFICAR QUEM ESTÁ LOGADO (SEM CONFLITO)
 // ==========================================
-const usuarioString = localStorage.getItem('usuarioLogado');
+const sessaoVendas = localStorage.getItem('usuarioLogado');
 let isAdmin = false;
 
-if (!usuarioString) {
-    window.location.href = "login.html"; // Expulsa se não estiver logado
+if (!sessaoVendas) {
+    window.location.href = "login.html";
 } else {
-    const usuario = JSON.parse(usuarioString);
-    if (usuario.email === 'joao@evoplan.com') {
+    const usuarioVendas = JSON.parse(sessaoVendas);
+    if (usuarioVendas.email === 'joao@evoplan.com') {
         isAdmin = true;
     }
 }

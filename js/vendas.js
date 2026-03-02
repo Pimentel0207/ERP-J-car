@@ -264,7 +264,23 @@ btnConfirmar.addEventListener('click', async () => {
 
         if (resposta.ok) {
             alert(dados.mensagem);
-            window.location.href = "produtos.html";
+
+            // 1. Força a tabela de histórico a puxar a nova venda do banco
+            if (typeof carregarVendidos === 'function') {
+                carregarVendidos();
+            }
+
+            // 2. Muda para a tela de Histórico magicamente
+            const menuHistorico = document.querySelectorAll('.menu-item')[4];
+            mudarTela('sec-historico', menuHistorico);
+
+            // 3. Limpa os campos da venda para a próxima
+            document.getElementById('vendaCpf').value = '';
+            document.getElementById('vendaNome').value = '';
+            document.getElementById('vendaEntrada').value = '';
+            document.getElementById('resumoTotal').textContent = 'R$ 0,00';
+            btnConfirmar.style.display = 'none';
+
         } else {
             alert('❌ Erro: ' + dados.mensagem);
         }

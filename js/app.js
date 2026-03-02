@@ -12,29 +12,34 @@ if (!usuarioString) {
     }
 }
 
-// 2. A Mágica de Navegar (SPA)
+// 2. A Mágica de Navegar (SPA) - BLINDADA
 function mudarTela(idSecaoAlvo, elementoClicado) {
-    // Esconde todas as seções
+    // 1. Esconde todas as seções
     const todasSecoes = document.querySelectorAll('.secao-tela');
     todasSecoes.forEach(secao => {
         secao.classList.remove('ativa');
     });
 
-    // Remove a cor azul de todos os botões do menu
+    // 2. Remove a cor azul de todos os botões do menu
     const todosItensMenu = document.querySelectorAll('.menu-item');
     todosItensMenu.forEach(item => {
         item.classList.remove('ativo');
     });
 
-    // Mostra apenas a seção clicada
-    document.getElementById(idSecaoAlvo).classList.add('ativa');
+    // 3. Mostra a seção alvo (se ela existir)
+    const secaoAlvo = document.getElementById(idSecaoAlvo);
+    if (secaoAlvo) {
+        secaoAlvo.classList.add('ativa');
+    }
 
-    // Pinta de azul o botão clicado
-    elementoClicado.classList.add('ativo');
-
-    // Atualiza a barra superior (Breadcrumb)
-    const nomeDaTela = elementoClicado.textContent.trim().split(' ')[1] || "Dashboard";
-    document.getElementById('caminhoTela').textContent = `Home > ${nomeDaTela}`;
+    // 4. Pinta o menu de azul e atualiza o topo (se o elemento foi passado)
+    if (elementoClicado) {
+        elementoClicado.classList.add('ativo');
+        const nomeDaTela = elementoClicado.textContent.trim() || "Módulo";
+        document.getElementById('caminhoTela').textContent = `Home > ${nomeDaTela}`;
+    } else {
+        document.getElementById('caminhoTela').textContent = `Home > Sistema`;
+    }
 }
 
 // 3. Sair do Sistema

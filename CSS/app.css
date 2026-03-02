@@ -433,7 +433,7 @@ body.modo-spa {
 .recibo-linha strong {
     color: #0f172a;
     font-weight: 500;
-    /* Removido o bold pesado */
+
 }
 
 .recibo-divisor {
@@ -447,8 +447,7 @@ body.modo-spa {
     justify-content: space-between;
     font-size: 16px;
     margin-top: 20px;
-    color: #047857;
-    font-weight: bold;
+
     /* MANTIDO PARA DESTAQUE FINAL */
 }
 
@@ -518,7 +517,7 @@ body.modo-spa {
 
 .dash-card-valor {
     font-size: 22px;
-    font-weight: bold;
+
     /* MANTIDO PARA DASHBOARD */
     color: #0f172a;
 }

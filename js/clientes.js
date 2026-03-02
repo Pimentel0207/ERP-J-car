@@ -1,100 +1,145 @@
 // ==========================================
-// 1. VARIÁVEIS E MEMÓRIA
+// 1. MAPEANDO OS ELEMENTOS DA TELA
 // ==========================================
-const modal = document.getElementById('modalCadastro');
-const btnAbrir = document.getElementById('btnAbrirModal');
-const btnFechar = document.getElementById('btnFecharModal');
-const form = document.getElementById('formCadastrarCliente');
+const modalCliente = document.getElementById('modalCliente');
+const btnAbrirModal = document.getElementById('btnAbrirModalCliente');
+const btnFecharModal = document.getElementById('btnFecharModal');
+const btnCancelarModal = document.getElementById('btnCancelarModal');
+const btnSalvarCliente = document.getElementById('btnSalvarCliente');
+const inputBusca = document.getElementById('buscaCliente');
+const corpoTabela = document.getElementById('tabelaClientesBody');
+
+// Botões da Toolbar
+const btnEditarToolbar = document.querySelector('button[title="Editar"]');
+const btnExcluirToolbar = document.querySelector('button[title="Excluir"]');
+const btnRecarregarToolbar = document.querySelector('button[title="Recarregar"]');
 
 let idClienteSendoEditado = null;
-let todosOsClientes = []; // NOVA: Memória para guardar os dados do banco
-
-// Elementos dos Filtros (IDs que estão no seu HTML)
-const inputNome = document.getElementById('filtroNome');
-const inputDoc = document.getElementById('filtroDoc');
+let todosOsClientes = [];
 
 // ==========================================
-// 2. EVENTOS DE FILTRO (Tempo Real)
+// 2. BUSCA EM TEMPO REAL (Filtro Único)
 // ==========================================
-inputNome.addEventListener('input', filtrarClientes);
-inputDoc.addEventListener('input', filtrarClientes);
+inputBusca.addEventListener('input', (evento) => {
+    const termo = evento.target.value.toLowerCase();
 
-function filtrarClientes() {
-    const termoNome = inputNome.value.toLowerCase();
-    const termoDoc = inputDoc.value.toLowerCase();
-
-    // Filtra a lista guardada na memória
     const filtrados = todosOsClientes.filter(cliente => {
-        const nomeBate = cliente.nome.toLowerCase().includes(termoNome);
-        const docBate = cliente.documento.toLowerCase().includes(termoDoc);
-        return nomeBate && docBate;
+        const nomeBate = cliente.nome.toLowerCase().includes(termo);
+        const docBate = cliente.documento.toLowerCase().includes(termo);
+        return nomeBate || docBate; // Busca por nome OU documento
     });
 
-    renderizarTabela(filtrados); // Desenha apenas os que sobraram
-}
-
-// ==========================================
-// 3. MODAL (Abrir e Fechar)
-// ==========================================
-btnAbrir.onclick = () => {
-    idClienteSendoEditado = null;
-    form.reset();
-    modal.style.display = "flex";
-};
-
-btnFechar.onclick = () => {
-    modal.style.display = "none";
-};
-
-// 👉 NOVO: Lógica do botão "Cancelar" (Cinza)
-document.getElementById('btnCancelarCliente').addEventListener('click', () => {
-    modal.style.display = 'none';
+    renderizarTabela(filtrados);
 });
 
 // ==========================================
-// 4. PREPARAR EDIÇÃO
+// 3. ABRIR E FECHAR O MODAL
 // ==========================================
-function prepararEdicao(id, nome, documento, data_nascimento, telefone, email, endereco, data_ultima_compra, veiculo_comprado) {
-    idClienteSendoEditado = id;
-
-    document.getElementById('cadNome').value = nome;
-    document.getElementById('cadDoc').value = documento;
-    document.getElementById('cadNascimento').value = data_nascimento ? data_nascimento.split('T')[0] : '';
-    document.getElementById('cadTelefone').value = telefone || '';
-    document.getElementById('cadEmail').value = email || '';
-    document.getElementById('cadEndereco').value = endereco || '';
-    document.getElementById('cadUltimaCompra').value = data_ultima_compra ? data_ultima_compra.split('T')[0] : '';
-    document.getElementById('cadVeiculo').value = veiculo_comprado || '';
-
-    modal.style.display = "flex";
+function limparFormulario() {
+    idClienteSendoEditado = null;
+    document.getElementById('cadNome').value = '';
+    document.getElementById('cadDocumento').value = '';
+    document.getElementById('cadTelefone').value = '';
 }
+
+btnAbrirModal.addEventListener('click', () => {
+    limparFormulario();
+    modalCliente.style.display = "flex";
+});
+
+btnFecharModal.addEventListener('click', () => modalCliente.style.display = "none");
+btnCancelarModal.addEventListener('click', () => modalCliente.style.display = "none");
+
+// ==========================================
+// 4. LÓGICA DA TOOLBAR (EDITAR E EXCLUIR VIA CHECKBOX)
+// ==========================================
+function obterIdSelecionado() {
+    // Pega o primeiro checkbox que estiver marcado na tabela
+    const checkbox = document.querySelector('.check-cliente:checked');
+    if (!checkbox) {
+        alert("⚠️ Por favor, selecione um cliente na tabela primeiro!");
+        return null;
+    }
+    return checkbox.value;
+}
+
+// Botão Editar da Toolbar
+btnEditarToolbar.addEventListener('click', () => {
+    const id = obterIdSelecionado();
+    if (!id) return;
+
+    const cliente = todosOsClientes.find(c => c.id == id);
+    if (cliente) {
+        idClienteSendoEditado = cliente.id;
+        document.getElementById('cadNome').value = cliente.nome;
+        document.getElementById('cadDocumento').value = cliente.documento;
+        document.getElementById('cadTelefone').value = cliente.telefone || '';
+
+        modalCliente.style.display = "flex";
+    }
+});
+
+// Botão Excluir da Toolbar
+btnExcluirToolbar.addEventListener('click', async () => {
+    const id = obterIdSelecionado();
+    if (!id) return;
+
+    if (confirm("Tem certeza que deseja excluir este cliente? Essa ação não pode ser desfeita.")) {
+        try {
+            const resposta = await fetch(`http://localhost:3000/clientes/${id}`, { method: 'DELETE' });
+            if (resposta.ok) {
+                alert('🗑️ Cliente excluído com sucesso!');
+                carregarClientes();
+            } else {
+                alert('❌ Erro ao excluir cliente.');
+            }
+        } catch (erro) {
+            console.error('Erro:', erro);
+        }
+    }
+});
+
+// Botão Recarregar da Toolbar
+btnRecarregarToolbar.addEventListener('click', () => {
+    inputBusca.value = ''; // Limpa a busca
+    carregarClientes();
+});
 
 // ==========================================
 // 5. SALVAR NO BANCO (POST ou PUT)
 // ==========================================
-form.addEventListener('submit', async (evento) => {
-    evento.preventDefault();
+btnSalvarCliente.addEventListener('click', async () => {
+    const nome = document.getElementById('cadNome').value;
+    const documento = document.getElementById('cadDocumento').value;
 
+    if (!nome || !documento) {
+        alert("⚠️ O Nome e o CPF/CNPJ são obrigatórios!");
+        return;
+    }
+
+    // Criando o pacote para enviar (enviando null para os campos que ocultamos no layout limpo)
     const pacoteCliente = {
-        nome: document.getElementById('cadNome').value,
-        documento: document.getElementById('cadDoc').value,
-        data_nascimento: document.getElementById('cadNascimento').value || null,
+        nome: nome,
+        documento: documento,
         telefone: document.getElementById('cadTelefone').value,
-        email: document.getElementById('cadEmail').value,
-        endereco: document.getElementById('cadEndereco').value,
-        data_ultima_compra: document.getElementById('cadUltimaCompra').value || null,
-        veiculo_comprado: document.getElementById('cadVeiculo').value
+        data_nascimento: null,
+        email: null,
+        endereco: null,
+        data_ultima_compra: null,
+        veiculo_comprado: null
     };
 
     try {
         let resposta;
         if (idClienteSendoEditado !== null) {
+            // Editando
             resposta = await fetch(`http://localhost:3000/clientes/${idClienteSendoEditado}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(pacoteCliente)
             });
         } else {
+            // Criando novo
             resposta = await fetch('http://localhost:3000/clientes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -103,13 +148,11 @@ form.addEventListener('submit', async (evento) => {
         }
 
         if (resposta.ok) {
-            alert('🎉 Cliente salvo com sucesso!');
-            modal.style.display = "none";
-            form.reset();
-            idClienteSendoEditado = null;
-            carregarClientes();
+            modalCliente.style.display = "none";
+            limparFormulario();
+            carregarClientes(); // Atualiza a tabela na hora
         } else {
-            alert('❌ Erro ao salvar. Verifique se o CPF/CNPJ já não está cadastrado.');
+            alert('❌ Erro ao salvar. Verifique se o CPF/CNPJ já existe no sistema.');
         }
     } catch (erro) {
         console.error('Erro:', erro);
@@ -117,66 +160,41 @@ form.addEventListener('submit', async (evento) => {
 });
 
 // ==========================================
-// 6. CARREGAR E RENDERIZAR CLIENTES
+// 6. CARREGAR E RENDERIZAR CLIENTES NA TABELA NOVA
 // ==========================================
 async function carregarClientes() {
     try {
         const resposta = await fetch('http://localhost:3000/clientes');
-        todosOsClientes = await resposta.json(); // Guarda o resultado na variável global
-        renderizarTabela(todosOsClientes); // Desenha a tabela completa no início
+        todosOsClientes = await resposta.json();
+        renderizarTabela(todosOsClientes);
     } catch (erro) {
         console.error('Erro ao carregar os clientes:', erro);
     }
 }
 
 function renderizarTabela(lista) {
-    const corpoTabela = document.getElementById('corpoTabelaClientes');
-    corpoTabela.innerHTML = '';
+    corpoTabela.innerHTML = ''; // Limpa os dados falsos do HTML
+
+    if (lista.length === 0) {
+        corpoTabela.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px;">Nenhum cliente encontrado.</td></tr>`;
+        return;
+    }
 
     lista.forEach(cliente => {
         const linha = document.createElement('tr');
 
-        const formataData = (dataSql) => {
-            if (!dataSql) return '—';
-            const dataObj = new Date(dataSql);
-            dataObj.setMinutes(dataObj.getMinutes() + dataObj.getTimezoneOffset());
-            return dataObj.toLocaleDateString('pt-BR');
-        };
-
+        // Cria a linha exatamente no padrão do app.html
         linha.innerHTML = `
-            <td style="font-weight: bold;">${cliente.nome}</td>
-            <td>${cliente.documento}</td>
-            <td>${formataData(cliente.data_nascimento)}</td>
+            <td class="col-checkbox"><input type="checkbox" class="check-cliente" value="${cliente.id}"></td>
+            <td>${cliente.id}</td>
+            <td style="font-weight: 500;">${cliente.nome}</td>
             <td>${cliente.telefone || '-'}</td>
-            <td>${cliente.email || '-'}</td>
-            <td>${cliente.endereco || '-'}</td>
-            <td>${formataData(cliente.data_ultima_compra)}</td>
-            <td>${cliente.veiculo_comprado || '-'}</td>
-            
-            <td><button onclick="prepararEdicao(${cliente.id}, '${cliente.nome}', '${cliente.documento}', '${cliente.data_nascimento || ''}', '${cliente.telefone || ''}', '${cliente.email || ''}', '${cliente.endereco || ''}', '${cliente.data_ultima_compra || ''}', '${cliente.veiculo_comprado || ''}')" style="background:#f59e0b; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Editar</button></td>
-            
-            <td><button onclick="deletarCliente(${cliente.id})" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Excluir</button></td>
+            <td>${cliente.documento}</td>
         `;
 
         corpoTabela.appendChild(linha);
     });
 }
 
-// ==========================================
-// 7. EXCLUIR CLIENTE
-// ==========================================
-async function deletarCliente(id) {
-    if (confirm("Tem certeza que deseja excluir este cliente?")) {
-        try {
-            const resposta = await fetch(`http://localhost:3000/clientes/${id}`, { method: 'DELETE' });
-            if (resposta.ok) {
-                alert('🗑️ Cliente excluído!');
-                carregarClientes();
-            }
-        } catch (erro) {
-            console.error('Erro:', erro);
-        }
-    }
-}
-
-window.onload = carregarClientes;
+// Inicia carregando os clientes quando a página abre
+carregarClientes();

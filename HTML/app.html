@@ -392,27 +392,20 @@
             <section id="sec-comissoes" class="secao-tela">
                 <h2 class="titulo-secao">Comissões e Metas</h2>
 
-                <div style="display: flex; gap: 20px; margin-bottom: 20px;">
-                    <div
-                        style="flex: 1; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                        <h3 style="margin: 0 0 10px 0; color: #64748b; font-size: 12px; text-transform: uppercase;">Meta
-                            Global (Mês)</h3>
-                        <div style="font-size: 22px; font-weight: bold; color: #0f172a;" id="cardMetaTotal">R$ 0,00
-                        </div>
+                <div class="cards-indicadores">
+                    <div class="card-estatistica">
+                        <h3>Meta Global (Mês)</h3>
+                        <div class="card-valor" id="cardMetaTotal">R$ 0,00</div>
                     </div>
-                    <div
-                        style="flex: 1; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                        <h3 style="margin: 0 0 10px 0; color: #64748b; font-size: 12px; text-transform: uppercase;">
-                            Faturamento Atual</h3>
-                        <div style="font-size: 22px; font-weight: bold; color: #10b981;" id="cardMetaAlcancada">R$ 0,00
-                        </div>
+
+                    <div class="card-estatistica">
+                        <h3>Faturamento Atual</h3>
+                        <div class="card-valor valor-faturamento" id="cardMetaAlcancada">R$ 0,00</div>
                     </div>
-                    <div
-                        style="flex: 1; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                        <h3 style="margin: 0 0 10px 0; color: #64748b; font-size: 12px; text-transform: uppercase;">
-                            Comissões a Pagar</h3>
-                        <div style="font-size: 22px; font-weight: bold; color: #f59e0b;" id="cardComissoesPendentes">R$
-                            0,00</div>
+
+                    <div class="card-estatistica">
+                        <h3>Comissões a Pagar</h3>
+                        <div class="card-valor valor-comissao" id="cardComissoesPendentes">R$ 0,00</div>
                     </div>
                 </div>
 

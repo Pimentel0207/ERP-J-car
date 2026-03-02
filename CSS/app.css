@@ -51,7 +51,8 @@ body.modo-spa {
     text-decoration: none;
     border-radius: 4px;
     margin-bottom: 2px;
-    font-weight: 500;
+    font-weight: 400;
+    /* Ajustado para formalidade */
     font-size: 13px;
     transition: 0.2s;
     cursor: pointer;
@@ -66,6 +67,8 @@ body.modo-spa {
     background-color: #eff6ff;
     color: #2563eb;
     border-left: 3px solid #2563eb;
+    font-weight: 500;
+    /* Leve destaque apenas para o item ativo */
 }
 
 .sidebar-rodape {
@@ -123,6 +126,8 @@ body.modo-spa {
     font-size: 18px;
     color: #0f172a;
     margin: 0 0 15px 0;
+    font-weight: 500;
+    /* Removido o negrito exaltado */
 }
 
 /* 3. TOOLBAR (BARRA DE FERRAMENTAS) E BUSCA */
@@ -197,7 +202,8 @@ body.modo-spa {
 
 .tabela-rnx th {
     padding: 10px 15px;
-    font-weight: 600;
+    font-weight: 500;
+    /* Removido o negrito para ser mais formal */
     border-bottom: 1px solid #e2e8f0;
     color: #475569;
     background: #f8fafc;
@@ -234,7 +240,8 @@ body.modo-spa {
 .campo label {
     display: block;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 400;
+    /* Suavizado para formalidade */
     color: #475569;
     margin-bottom: 4px;
 }
@@ -269,7 +276,8 @@ body.modo-spa {
     border: none;
     border-radius: 4px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 400;
+    /* Removido negrito */
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -337,6 +345,8 @@ body.modo-spa {
     margin: 0;
     font-size: 16px;
     color: #0f172a;
+    font-weight: 500;
+    /* Removido negrito pesado */
 }
 
 .btn-fechar-modal {
@@ -387,6 +397,8 @@ body.modo-spa {
     font-size: 12px;
     text-transform: uppercase;
     margin: 0 0 10px 0;
+    font-weight: 400;
+    /* Suavizado */
 }
 
 .pdv-recibo {
@@ -403,6 +415,8 @@ body.modo-spa {
     color: #0f172a;
     border-bottom: 1px solid #cbd5e1;
     padding-bottom: 8px;
+    font-weight: 500;
+    /* Suavizado */
 }
 
 .recibo-linhas {
@@ -418,6 +432,8 @@ body.modo-spa {
 
 .recibo-linha strong {
     color: #0f172a;
+    font-weight: 500;
+    /* Removido o bold pesado */
 }
 
 .recibo-divisor {
@@ -433,6 +449,7 @@ body.modo-spa {
     margin-top: 20px;
     color: #047857;
     font-weight: bold;
+    /* MANTIDO PARA DESTAQUE FINAL */
 }
 
 .badge {
@@ -452,7 +469,7 @@ body.modo-spa {
 }
 
 /* ==========================================
-   8. MÓDULO DASHBOARD
+   8. MÓDULO DASHBOARD (NEGRITO MANTIDO CONFORME PEDIDO)
    ========================================== */
 
 /* Container dos Cards Superiores */
@@ -495,11 +512,14 @@ body.modo-spa {
     color: #64748b;
     font-size: 12px;
     text-transform: uppercase;
+    font-weight: 400;
+    /* Suavizado */
 }
 
 .dash-card-valor {
     font-size: 22px;
     font-weight: bold;
+    /* MANTIDO PARA DASHBOARD */
     color: #0f172a;
 }
 
@@ -531,11 +551,12 @@ body.modo-spa {
     margin: 0 0 15px 0;
     color: #0f172a;
     font-size: 14px;
+    font-weight: 500;
+    /* Suavizado */
 }
 
 /* =========================================
    LOGIN - CONFIGURAÇÕES GERAIS
-   Removemos as margens padrão e escolhemos uma fonte limpa.
    ========================================= */
 * {
     margin: 0;
@@ -548,38 +569,34 @@ body.modo-spa {
 .container-login {
     display: flex;
     min-height: 100vh;
-    /* Ocupa 100% da altura da tela */
 }
 
 /* =========================================
-   LOGIN - LADO ESQUERDO: O FORMULÁRIO (Área de Ação)
+   LOGIN - LADO ESQUERDO: O FORMULÁRIO
    ========================================= */
 .lado-formulario {
     flex: 0 0 400px;
-    /* Largura fixa de 400px para o formulário no computador */
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* Centraliza o conteúdo verticalmente */
     padding: 40px;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    /* Sombra leve para separar da imagem */
     z-index: 10;
 }
 
-/* Estilização da Logo, Títulos e Textos */
 .logo {
     max-width: 150px;
     margin-bottom: 30px;
     align-self: center;
-    /* Centraliza a logo */
 }
 
 .lado-formulario h2 {
     color: #1a1a1a;
     font-size: 24px;
     margin-bottom: 8px;
+    font-weight: 500;
+    /* Removido o negrito para ser mais formal */
 }
 
 .lado-formulario p.subtitulo {
@@ -588,7 +605,6 @@ body.modo-spa {
     margin-bottom: 30px;
 }
 
-/* Estilização dos Campos de Entrada (Inputs) */
 .grupo-input {
     margin-bottom: 20px;
     display: flex;
@@ -598,7 +614,8 @@ body.modo-spa {
 .grupo-input label {
     font-size: 13px;
     color: #333;
-    font-weight: 600;
+    font-weight: 400;
+    /* Suavizado */
     margin-bottom: 5px;
 }
 
@@ -613,32 +630,27 @@ body.modo-spa {
 .grupo-input input:focus {
     outline: none;
     border-color: #2b6cb0;
-    /* Azul profissional ao clicar no campo */
 }
 
-/* Estilização do Botão */
 .btn-entrar {
     background-color: #2b6cb0;
-    /* Azul corporativo */
     color: white;
     border: none;
     padding: 14px;
     border-radius: 6px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 400;
+    /* Removido negrito */
     cursor: pointer;
     margin-top: 10px;
     transition: background-color 0.3s;
     width: 100%;
-    /* Garante que o botão ocupe toda a largura disponível */
 }
 
 .btn-entrar:hover {
     background-color: #1e4e8c;
-    /* Azul mais escuro ao passar o mouse */
 }
 
-/* Link de criar conta */
 .link-conta {
     text-align: center;
     margin-top: 20px;
@@ -649,27 +661,23 @@ body.modo-spa {
 .link-conta a {
     color: #2b6cb0;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 500;
+    /* Suavizado */
 }
 
 /* =========================================
    LOGIN - LADO DIREITO: PAINEL CORPORATIVO
-   Substitui a imagem por um painel de informações
    ========================================= */
 .lado-corporativo {
     flex: 1;
-    /* Um gradiente azul escuro elegante */
     background: linear-gradient(135deg, #1e4e8c 0%, #0d284a 100%);
     color: #ffffff;
     display: flex;
     align-items: center;
-    /* Centraliza verticalmente */
     justify-content: center;
-    /* Centraliza horizontalmente */
     padding: 40px;
 }
 
-/* Container do texto e dos recursos limitando a largura para ficar bonito */
 .conteudo-info {
     max-width: 500px;
 }
@@ -677,32 +685,28 @@ body.modo-spa {
 .conteudo-info h1 {
     font-size: 36px;
     margin-bottom: 15px;
-    font-weight: 700;
+    font-weight: 400;
+    /* Removido o negrito exaltado */
 }
 
 .conteudo-info p {
     font-size: 16px;
     line-height: 1.6;
     color: #cbd5e1;
-    /* Um azul/cinza bem clarinho */
     margin-bottom: 40px;
 }
 
-/* Estilização da lista de benefícios */
 .lista-recursos {
     display: flex;
     flex-direction: column;
     gap: 25px;
-    /* Espaço entre cada item */
 }
 
 .item-recurso {
     display: flex;
     align-items: flex-start;
     gap: 15px;
-    /* Espaço entre o ícone e os textos */
     background: rgba(255, 255, 255, 0.05);
-    /* Fundo levemente transparente */
     padding: 20px;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -711,7 +715,6 @@ body.modo-spa {
 
 .item-recurso:hover {
     transform: translateY(-5px);
-    /* Efeito de pular levemente ao passar o mouse */
     background: rgba(255, 255, 255, 0.1);
 }
 
@@ -724,6 +727,8 @@ body.modo-spa {
     font-size: 16px;
     margin-bottom: 5px;
     color: #ffffff;
+    font-weight: 500;
+    /* Suavizado */
 }
 
 .item-recurso span {
@@ -731,31 +736,56 @@ body.modo-spa {
     color: #94a3b8;
 }
 
-/* Responsividade: Esconde esse painel também no celular */
 @media (max-width: 768px) {
     .lado-corporativo {
         display: none;
     }
 }
 
-/* =========================================
-   LOGIN - RESPONSIVIDADE (Para Celulares)
-   Se a tela for menor que 768px, muda o layout
-   ========================================= */
 @media (max-width: 768px) {
     .container-login {
         flex-direction: column;
-        /* Coloca os elementos em coluna */
     }
 
     .lado-formulario {
         flex: 1;
-        /* Ocupa a tela toda */
         width: 100%;
     }
 
     .lado-imagem {
         display: none;
-        /* Esconde a imagem no celular para focar no formulário */
     }
+}
+
+/* ==========================================
+   CARDS DE INDICADORES (COMISSÕES E METAS)
+   ========================================== */
+
+.cards-indicadores {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.card-estatistica {
+    flex: 1;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.card-estatistica h3 {
+    margin: 0 0 10px 0;
+    color: #64748b;
+    font-size: 11px;
+    /* Tamanho menor para formalidade */
+    text-transform: uppercase;
+    font-weight: 400;
+    /* Removido o negrito exaltado */
+}
+
+.card-valor {
+    font-size: 20px;
 }

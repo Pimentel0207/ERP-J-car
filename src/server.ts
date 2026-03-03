@@ -265,6 +265,34 @@ app.delete('/usuarios/:id', (req, res) => {
     });
 });
 
+// ==========================================
+// ATUALIZAR USUÁRIO (PUT)
+// ==========================================
+app.put('/usuarios/:id', (req, res) => {
+    const id = req.params.id;
+    const { nome, email, password } = req.body;
+
+    try {
+        // Se a senha foi preenchida, atualiza nome, email e senha
+        if (password && password.trim() !== '') {
+            const query = 'UPDATE usuarios SET nome = ?, email = ?, senha = ? WHERE id = ?';
+            // Mudamos 'db' para 'conexao' para bater com o seu arquivo!
+            conexao.query(query, [nome, email, password, id], (err) => {
+                if (err) return res.status(500).json({ mensagem: err.message });
+                res.status(200).json({ mensagem: 'Usuário atualizado com sucesso (com senha)!' });
+            });
+        } else {
+            // Se a senha veio vazia, atualiza SÓ o nome e o email
+            const query = 'UPDATE usuarios SET nome = ?, email = ? WHERE id = ?';
+            conexao.query(query, [nome, email, id], (err) => {
+                if (err) return res.status(500).json({ mensagem: err.message });
+                res.status(200).json({ mensagem: 'Usuário atualizado com sucesso (sem trocar senha)!' });
+            });
+        }
+    } catch (erro) {
+        res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+    }
+});
 // =========================================================
 // ROTAS DO MÓDULO DE VENDAS
 // =========================================================

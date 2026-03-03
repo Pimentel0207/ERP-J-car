@@ -553,13 +553,13 @@
                 <div class="toolbar-rnx">
                     <div class="toolbar-acoes">
                         <button class="btn-icon" id="btnAbrirModalUsuario" title="Novo Vendedor">
-                            <span class="material-symbols-outlined">person_add</span>
+                            <span class="material-symbols-outlined">add</span>
                         </button>
-                        <button class="btn-icon" title="Editar Permissões">
-                            <span class="material-symbols-outlined">manage_accounts</span>
+                        <button class="btn-icon" id="btnEditarUsuarioToolbar" title="Editar Usuário">
+                            <span class="material-symbols-outlined">edit</span>
                         </button>
                         <button class="btn-icon" id="btnExcluirUsuarioToolbar" title="Revogar Acesso (Excluir)">
-                            <span class="material-symbols-outlined">person_remove</span>
+                            <span class="material-symbols-outlined">delete</span>
                         </button>
                         <button class="btn-icon" id="btnRecarregarUsuarios" title="Recarregar">
                             <span class="material-symbols-outlined">refresh</span>
@@ -590,7 +590,7 @@
                 <div id="modalUsuario" class="modal-fundo">
                     <div class="modal-box" style="width: 400px;">
                         <div class="modal-header">
-                            <h3>Cadastrar Novo Acesso</h3>
+                            <h3 id="tituloModalUsuario">Cadastrar Novo Acesso</h3>
                             <button id="btnFecharModalUsuario" class="btn-fechar-modal">✖</button>
                         </div>
 
@@ -606,15 +606,15 @@
                                     placeholder="Ex: carlos@jcar.com">
                             </div>
                             <div class="campo">
-                                <label>Senha Provisória</label>
+                                <label>Senha</label>
                                 <input type="password" id="cadUsuarioSenha" class="input-padrao"
-                                    placeholder="Mínimo de 6 caracteres">
+                                    placeholder="Nova senha (ou vazio para manter atual)">
                             </div>
                         </div>
 
                         <div class="modal-footer">
                             <button id="btnCancelarModalUsuario" class="btn-secundario">Cancelar</button>
-                            <button id="btnSalvarUsuario" class="btn-primario">Criar Conta</button>
+                            <button id="btnSalvarUsuario" class="btn-primario">Salvar Acesso</button>
                         </div>
                     </div>
                 </div>

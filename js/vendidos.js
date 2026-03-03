@@ -1,222 +1,262 @@
-// ==========================================
-// 1. VERIFICAR QUEM ESTÁ LOGADO (SEM CONFLITO)
-// ==========================================
-const sessaoVendas = localStorage.getItem('usuarioLogado');
-let isAdmin = false;
+// js/vendidos.js
+(() => {
+    // ==========================================
+    // 1. VERIFICAR QUEM ESTÁ LOGADO (ADMIN/VENDEDOR)
+    // ==========================================
+    const sessaoVendas = localStorage.getItem('usuarioLogado');
+    let isAdmin = false;
 
-if (!sessaoVendas) {
-    window.location.href = "login.html";
-} else {
-    const usuarioVendas = JSON.parse(sessaoVendas);
-    if (usuarioVendas.email === 'joao@evoplan.com') {
-        isAdmin = true;
-    }
-}
-
-// ==========================================
-// 2. MAPEANDO ELEMENTOS DA TELA
-// ==========================================
-const cabecalhoHistorico = document.getElementById('cabecalhoTabelaHistorico');
-const corpoTabelaHistorico = document.getElementById('tabelaHistoricoBody');
-const inputBuscaHistorico = document.getElementById('buscaHistorico');
-
-// Botões Toolbar
-const btnEstornarToolbar = document.getElementById('btnEstornarVendaToolbar');
-const btnRecarregarHistorico = document.getElementById('btnRecarregarHistorico');
-
-let todasAsVendas = [];
-
-// ==========================================
-// 3. BUSCA EM TEMPO REAL
-// ==========================================
-inputBuscaHistorico.addEventListener('input', (evento) => {
-    const termo = evento.target.value.toLowerCase();
-
-    const filtrados = todasAsVendas.filter(venda => {
-        const clienteBate = venda.cliente_nome.toLowerCase().includes(termo);
-        const veiculoBate = `${venda.marca} ${venda.modelo}`.toLowerCase().includes(termo);
-        return clienteBate || veiculoBate;
-    });
-
-    renderizarTabelaHistorico(filtrados);
-});
-
-// ==========================================
-// 4. LÓGICA DA TOOLBAR (ESTORNAR)
-// ==========================================
-btnEstornarToolbar.addEventListener('click', async () => {
-    if (!isAdmin) {
-        alert("🔒 Acesso Negado: Apenas administradores podem estornar vendas.");
-        return;
+    if (!sessaoVendas) {
+        window.location.href = "login.html";
+        return; // Interrompe a execução se não estiver logado
+    } else {
+        const usuarioVendas = JSON.parse(sessaoVendas);
+        if (usuarioVendas.email === 'joao@evoplan.com') {
+            isAdmin = true;
+        }
     }
 
-    const checkboxSelecionado = document.querySelector('.check-venda:checked');
-    if (!checkboxSelecionado) {
-        alert("⚠️ Selecione uma venda na tabela para estornar.");
-        return;
+    // ==========================================
+    // 2. MAPEANDO ELEMENTOS DA TELA
+    // ==========================================
+    const cabecalhoHistorico = document.getElementById('cabecalhoTabelaHistorico');
+    const corpoTabelaHistorico = document.getElementById('tabelaHistoricoBody');
+    const inputBuscaHistorico = document.getElementById('buscaHistorico');
+
+    // Botões Toolbar
+    const btnImprimirHistorico = document.getElementById('btnImprimirHistorico');
+    const btnVisualizarHistorico = document.querySelector('#sec-historico button[title="Visualizar Detalhes"]');
+    const btnEstornarToolbar = document.getElementById('btnEstornarVendaToolbar');
+    const btnRecarregarHistorico = document.getElementById('btnRecarregarHistorico');
+    const btnAbrirFiltrosHistorico = document.getElementById('btnAbrirFiltrosHistorico');
+
+    // Elementos do Filtro
+    const painelFiltrosHistorico = document.getElementById('painelFiltrosHistorico');
+    const btnAplicarFiltroHistorico = document.getElementById('btnAplicarFiltroHistorico');
+    const inputFiltroMes = document.getElementById('filtroHistoricoMes');
+    const inputFiltroValor = document.getElementById('filtroHistoricoValor');
+
+    let todasAsVendas = [];
+
+    // ==========================================
+    // 3. FUNÇÃO DE SELEÇÃO BLINDADA
+    // ==========================================
+    function obterIdVendaSelecionada() {
+        const checkbox = corpoTabelaHistorico.querySelector('input[type="checkbox"]:checked');
+        if (!checkbox) {
+            alert("⚠️ Selecione uma venda no histórico primeiro.");
+            return null;
+        }
+        return checkbox.value;
     }
 
-    const idVenda = checkboxSelecionado.value;
+    // ==========================================
+    // 4. LÓGICA DA TOOLBAR
+    // ==========================================
 
-    if (confirm("⚠️ ATENÇÃO: Deseja cancelar esta venda? O carro voltará para o estoque disponível.")) {
-        try {
-            const res = await fetch(`http://localhost:3000/vendas/${idVenda}`, { method: 'DELETE' });
-            if (res.ok) {
-                alert("✅ Venda cancelada com sucesso! O veículo retornou ao estoque.");
-                carregarVendidos(); // Atualiza a tela
-            } else {
-                alert("❌ Erro ao estornar a venda.");
+    // --- BUSCA RÁPIDA (TEXTO) ---
+    if (inputBuscaHistorico) {
+        inputBuscaHistorico.addEventListener('input', (evento) => {
+            const termo = evento.target.value.toLowerCase();
+            const filtrados = todasAsVendas.filter(venda => {
+                const clienteBate = venda.cliente_nome.toLowerCase().includes(termo);
+                const veiculoBate = `${venda.marca} ${venda.modelo}`.toLowerCase().includes(termo);
+                return clienteBate || veiculoBate;
+            });
+            renderizarTabelaHistorico(filtrados);
+        });
+    }
+
+    // --- IMPRIMIR ---
+    if (btnImprimirHistorico) {
+        btnImprimirHistorico.addEventListener('click', () => {
+            const mes = inputFiltroMes.value || "Geral";
+            const tituloOriginal = document.title;
+            document.title = `Relatorio_Vendas_JCAR_${mes}`;
+            window.print();
+            document.title = tituloOriginal;
+        });
+    }
+
+    // --- VISUALIZAR DETALHES ---
+    if (btnVisualizarHistorico) {
+        btnVisualizarHistorico.addEventListener('click', () => {
+            const idVenda = obterIdVendaSelecionada();
+            if (!idVenda) return;
+
+            const venda = todasAsVendas.find(v => v.venda_id == idVenda);
+            if (venda) {
+                // Monta o objeto para a função global no app.js
+                const dadosDaVenda = {
+                    id: venda.venda_id,
+                    data: new Date(venda.data_venda).toLocaleString('pt-BR'),
+                    vendedor: "Vendedor da Venda", // Será ajustado quando a tabela vendas tiver o nome
+                    veiculo: `${venda.marca} ${venda.modelo} (${venda.ano})`,
+                    valor: Number(venda.valor_total).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+                    comissao: (Number(venda.valor_total) * 0.01).toLocaleString('pt-BR', { minimumFractionDigits: 2 }), // Calculando 1% na tela
+                    obs: `Forma de Pgto: ${venda.condicao_pagamento.toUpperCase()} | Entrada: R$ ${Number(venda.valor_entrada).toLocaleString('pt-BR')}`
+                };
+
+                if (typeof abrirVisualizacao === 'function') {
+                    abrirVisualizacao('venda', dadosDaVenda);
+                } else {
+                    console.error("Função abrirVisualizacao não encontrada.");
+                }
             }
+        });
+    }
+
+    // --- ESTORNAR (ADMIN ONLY) ---
+    if (btnEstornarToolbar) {
+        btnEstornarToolbar.addEventListener('click', async () => {
+            if (!isAdmin) {
+                alert("🔒 Acesso Negado: Apenas administradores podem estornar vendas.");
+                return;
+            }
+
+            const idVenda = obterIdVendaSelecionada();
+            if (!idVenda) return;
+
+            if (confirm("⚠️ ATENÇÃO: Deseja cancelar esta venda? O carro voltará para o estoque disponível.")) {
+                try {
+                    const res = await fetch(`http://localhost:3000/vendas/${idVenda}`, { method: 'DELETE' });
+                    if (res.ok) {
+                        alert("✅ Venda cancelada com sucesso! O veículo retornou ao estoque.");
+                        carregarVendidos(); // Atualiza sem F5
+                    } else {
+                        alert("❌ Erro ao estornar a venda.");
+                    }
+                } catch (erro) {
+                    console.error("Erro:", erro);
+                }
+            }
+        });
+    }
+
+    // --- RECARREGAR ---
+    if (btnRecarregarHistorico) {
+        btnRecarregarHistorico.addEventListener('click', () => {
+            const icone = btnRecarregarHistorico.querySelector('.material-symbols-outlined');
+            if (icone) {
+                icone.style.transition = "transform 0.5s ease";
+                icone.style.transform = "rotate(360deg)";
+                setTimeout(() => { icone.style.transform = "rotate(0deg)"; }, 500);
+            }
+            inputBuscaHistorico.value = '';
+            carregarVendidos(); // Traz tudo novamente
+        });
+    }
+
+    // --- FILTROS AVANÇADOS (ABRIR PAINEL) ---
+    if (btnAbrirFiltrosHistorico && painelFiltrosHistorico) {
+        btnAbrirFiltrosHistorico.addEventListener('click', () => {
+            painelFiltrosHistorico.style.display = painelFiltrosHistorico.style.display === 'none' || painelFiltrosHistorico.style.display === '' ? 'flex' : 'none';
+        });
+    }
+
+    // --- APLICAR FILTRO NO BACKEND ---
+    if (btnAplicarFiltroHistorico) {
+        btnAplicarFiltroHistorico.addEventListener('click', async () => {
+            const mes = inputFiltroMes.value;
+            const valorMin = inputFiltroValor.value;
+
+            // Monta a URL dinamicamente com os parâmetros preenchidos
+            let url = 'http://localhost:3000/vendas?';
+            if (mes) url += `mes=${mes}&`;
+            if (valorMin) url += `valorMin=${valorMin}`;
+
+            try {
+                // Vai no banco buscar já filtrado
+                const res = await fetch(url);
+                todasAsVendas = await res.json();
+
+                // Renderiza a nova lista
+                renderizarTabelaHistorico(todasAsVendas);
+            } catch (err) {
+                console.error("Erro ao filtrar histórico no back-end:", err);
+            }
+        });
+    }
+
+    // ==========================================
+    // 5. CARREGAR E RENDERIZAR TABELA
+    // ==========================================
+    async function carregarVendidos() {
+        try {
+            const resposta = await fetch('http://localhost:3000/vendas');
+            todasAsVendas = await resposta.json();
+
+            // Monta o Cabeçalho Baseado no Perfil
+            if (isAdmin) {
+                cabecalhoHistorico.innerHTML = `
+                    <tr>
+                        <th class="col-checkbox" style="width: 30px;"><input type="checkbox" disabled></th>
+                        <th>Data ↕</th>
+                        <th>Veículo ↕</th>
+                        <th>Cliente ↕</th>
+                        <th>Condição ↕</th>
+                        <th>Valor Total ↕</th>
+                    </tr>
+                `;
+            } else {
+                cabecalhoHistorico.innerHTML = `
+                    <tr>
+                        <th class="col-checkbox" style="width: 30px;"><input type="checkbox" disabled></th>
+                        <th>Data ↕</th>
+                        <th>Veículo ↕</th>
+                        <th>Cliente ↕</th>
+                    </tr>
+                `;
+                // Esconde botão para vendedores
+                if (btnEstornarToolbar) btnEstornarToolbar.style.display = 'none';
+            }
+
+            renderizarTabelaHistorico(todasAsVendas);
+
         } catch (erro) {
-            console.error("Erro:", erro);
-            alert("Erro de comunicação com o servidor.");
+            console.error('Erro ao carregar vendas:', erro);
         }
     }
-});
 
-btnRecarregarHistorico.addEventListener('click', () => {
-    inputBuscaHistorico.value = '';
+    function renderizarTabelaHistorico(lista) {
+        corpoTabelaHistorico.innerHTML = '';
+
+        if (lista.length === 0) {
+            const colunasSpan = isAdmin ? 6 : 4;
+            corpoTabelaHistorico.innerHTML = `<tr><td colspan="${colunasSpan}" style="text-align: center; padding: 20px;">Nenhuma venda encontrada para o filtro.</td></tr>`;
+            return;
+        }
+
+        lista.forEach(venda => {
+            const linha = document.createElement('tr');
+
+            // Corrige o timezone da data
+            const dataObjeto = new Date(venda.data_venda);
+            const dataVenda = new Date(dataObjeto.getTime() + Math.abs(dataObjeto.getTimezoneOffset() * 60000)).toLocaleDateString('pt-BR');
+
+            if (isAdmin) {
+                const valorTotalFormatado = Number(venda.valor_total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                linha.innerHTML = `
+                    <td class="col-checkbox"><input type="checkbox" class="check-venda" value="${venda.venda_id}"></td>
+                    <td style="font-weight: 500;">${dataVenda}</td>
+                    <td>${venda.marca} ${venda.modelo} (${venda.ano})</td>
+                    <td>${venda.cliente_nome}</td>
+                    <td style="text-transform: capitalize;">${venda.condicao_pagamento}</td>
+                    <td style="color: #047857; font-weight: 600;">${valorTotalFormatado}</td>
+                `;
+            } else {
+                linha.innerHTML = `
+                    <td class="col-checkbox"><input type="checkbox" class="check-venda" value="${venda.venda_id}"></td>
+                    <td style="font-weight: 500;">${dataVenda}</td>
+                    <td>${venda.marca} ${venda.modelo} (${venda.ano})</td>
+                    <td>${venda.cliente_nome}</td>
+                `;
+            }
+
+            corpoTabelaHistorico.appendChild(linha);
+        });
+    }
+
+    // Inicia a carga de dados ao abrir a tela
     carregarVendidos();
-});
-
-// ==========================================
-// 5. CARREGAR E RENDERIZAR
-// ==========================================
-async function carregarVendidos() {
-    try {
-        const resposta = await fetch('http://localhost:3000/vendas');
-        todasAsVendas = await resposta.json();
-
-        // 5.1 Monta o Cabeçalho Baseado no Perfil
-        if (isAdmin) {
-            cabecalhoHistorico.innerHTML = `
-                <tr>
-                    <th class="col-checkbox" style="width: 30px;"><input type="checkbox" disabled></th>
-                    <th>Data ↕</th>
-                    <th>Veículo ↕</th>
-                    <th>Cliente ↕</th>
-                    <th>Condição ↕</th>
-                    <th>Valor Total ↕</th>
-                </tr>
-            `;
-        } else {
-            cabecalhoHistorico.innerHTML = `
-                <tr>
-                    <th class="col-checkbox" style="width: 30px;"><input type="checkbox" disabled></th>
-                    <th>Data ↕</th>
-                    <th>Veículo ↕</th>
-                    <th>Cliente ↕</th>
-                </tr>
-            `;
-            // Esconde o botão de estornar visualmente para vendedores comuns
-            btnEstornarToolbar.style.display = 'none';
-        }
-
-        renderizarTabelaHistorico(todasAsVendas);
-
-    } catch (erro) {
-        console.error('Erro ao carregar vendas:', erro);
-    }
-}
-
-function renderizarTabelaHistorico(lista) {
-    corpoTabelaHistorico.innerHTML = '';
-
-    if (lista.length === 0) {
-        const colunasSpan = isAdmin ? 6 : 4;
-        corpoTabelaHistorico.innerHTML = `<tr><td colspan="${colunasSpan}" style="text-align: center; padding: 20px;">Nenhuma venda encontrada.</td></tr>`;
-        return;
-    }
-
-    lista.forEach(venda => {
-        const linha = document.createElement('tr');
-        const dataVenda = new Date(venda.data_venda).toLocaleDateString('pt-BR');
-
-        if (isAdmin) {
-            const valorTotalFormatado = Number(venda.valor_total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            linha.innerHTML = `
-                <td class="col-checkbox"><input type="checkbox" class="check-venda" value="${venda.venda_id}"></td>
-                <td style="font-weight: 500;">${dataVenda}</td>
-                <td>${venda.marca} ${venda.modelo} (${venda.ano})</td>
-                <td>${venda.cliente_nome}</td>
-                <td style="text-transform: capitalize;">${venda.condicao_pagamento}</td>
-                <td style="color: #047857; font-weight: 600;">${valorTotalFormatado}</td>
-            `;
-        } else {
-            linha.innerHTML = `
-                <td class="col-checkbox"><input type="checkbox" class="check-venda" value="${venda.venda_id}"></td>
-                <td style="font-weight: 500;">${dataVenda}</td>
-                <td>${venda.marca} ${venda.modelo} (${venda.ano})</td>
-                <td>${venda.cliente_nome}</td>
-            `;
-        }
-
-        corpoTabelaHistorico.appendChild(linha);
-    });
-}
-
-// Inicia
-carregarVendidos();
-
-// 1. Abrir/Fechar painel de filtros do Histórico
-document.getElementById('btnAbrirFiltrosHistorico').addEventListener('click', () => {
-    const painel = document.getElementById('painelFiltrosHistorico');
-    painel.style.display = painel.style.display === 'none' ? 'flex' : 'none';
-});
-
-// 2. Ação de Impressão do Histórico
-document.getElementById('btnImprimirHistorico').addEventListener('click', () => {
-    const mes = document.getElementById('filtroHistoricoMes').value || "Geral";
-    const tituloOriginal = document.title;
-    document.title = `Relatorio_Vendas_JCAR_${mes}`;
-
-    window.print();
-
-    document.title = tituloOriginal;
-});
-
-// 3. Lógica para Aplicar o Filtro (Enviando para o Backend)
-document.getElementById('btnAplicarFiltroHistorico').addEventListener('click', async () => {
-    const mes = document.getElementById('filtroHistoricoMes').value;
-    const valorMin = document.getElementById('filtroHistoricoValor').value;
-
-    try {
-        // Faz a requisição filtrada ao seu server.ts
-        const res = await fetch(`http://localhost:3000/vendas?mes=${mes}&valorMin=${valorMin}`);
-        const dados = await res.json();
-
-        // Chame a sua função que já existe para popular a tabela de histórico
-        // Exemplo: renderizarTabelaHistorico(dados);
-
-        alert("Histórico filtrado com sucesso!");
-    } catch (err) {
-        console.error("Erro ao filtrar histórico:", err);
-    }
-});
-
-// Localize o botão no seu arquivo e adicione o evento:
-document.querySelector('#sec-historico [title="Visualizar Detalhes"]').addEventListener('click', () => {
-    // Busca o checkbox marcado na tabela de histórico
-    const selecionado = document.querySelector('#tabelaHistoricoBody input[type="checkbox"]:checked');
-
-    if (!selecionado) {
-        alert("Por favor, selecione uma venda na tabela para visualizar.");
-        return;
-    }
-
-    const idVenda = selecionado.value;
-
-    // Aqui você busca os dados no seu array ou faz um fetch no banco
-    // Exemplo simulado:
-    const dadosDaVenda = {
-        id: idVenda,
-        data: "01/03/2026 14:00",
-        vendedor: "João Silva",
-        veiculo: "Porsche 911 Carrera",
-        valor: "850.000,00",
-        comissao: "8.500,00",
-        obs: "Venda realizada à vista com pacote de vitrificação incluso."
-    };
-
-    abrirVisualizacao('venda', dadosDaVenda);
-});
+})();

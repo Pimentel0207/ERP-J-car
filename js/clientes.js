@@ -198,3 +198,22 @@ function renderizarTabela(lista) {
 
 // Inicia carregando os clientes quando a página abre
 carregarClientes();
+
+document.getElementById('btnVisualizarCliente').addEventListener('click', () => {
+    const selecionado = document.querySelector('#tabelaClientesBody input[type="checkbox"]:checked');
+
+    if (!selecionado) {
+        alert("⚠️ Selecione um cliente na tabela primeiro!");
+        return;
+    }
+
+    const idCliente = selecionado.value;
+
+    // BUSCA O CLIENTE REAL no array que você já tem no arquivo
+    const clienteReal = todosOsClientes.find(c => c.id == idCliente);
+
+    if (clienteReal) {
+        // Passa o objeto real para a função do app.js
+        abrirVisualizacaoCliente(clienteReal);
+    }
+});

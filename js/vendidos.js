@@ -193,3 +193,30 @@ document.getElementById('btnAplicarFiltroHistorico').addEventListener('click', a
         console.error("Erro ao filtrar histórico:", err);
     }
 });
+
+// Localize o botão no seu arquivo e adicione o evento:
+document.querySelector('#sec-historico [title="Visualizar Detalhes"]').addEventListener('click', () => {
+    // Busca o checkbox marcado na tabela de histórico
+    const selecionado = document.querySelector('#tabelaHistoricoBody input[type="checkbox"]:checked');
+
+    if (!selecionado) {
+        alert("Por favor, selecione uma venda na tabela para visualizar.");
+        return;
+    }
+
+    const idVenda = selecionado.value;
+
+    // Aqui você busca os dados no seu array ou faz um fetch no banco
+    // Exemplo simulado:
+    const dadosDaVenda = {
+        id: idVenda,
+        data: "01/03/2026 14:00",
+        vendedor: "João Silva",
+        veiculo: "Porsche 911 Carrera",
+        valor: "850.000,00",
+        comissao: "8.500,00",
+        obs: "Venda realizada à vista com pacote de vitrificação incluso."
+    };
+
+    abrirVisualizacao('venda', dadosDaVenda);
+});

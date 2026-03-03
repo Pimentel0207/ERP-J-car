@@ -203,9 +203,9 @@
                         <button class="btn-icon" id="btnEditarCarro" title="Editar">
                             <span class="material-symbols-outlined">edit</span>
                         </button>
-                        <button class="btn-icon" title="Visualizar">
+                        <!-- <button class="btn-icon" title="Visualizar">
                             <span class="material-symbols-outlined">visibility</span>
-                        </button>
+                        </button> -->
                         <button class="btn-icon" id="btnExcluirCarro" title="Excluir">
                             <span class="material-symbols-outlined">delete</span>
                         </button>
@@ -299,7 +299,7 @@
                         <button class="btn-icon" title="Editar">
                             <span class="material-symbols-outlined">edit</span>
                         </button>
-                        <button class="btn-icon" title="Visualizar">
+                        <button class="btn-icon" id="btnVisualizarCliente" title="Visualizar Detalhes">
                             <span class="material-symbols-outlined">visibility</span>
                         </button>
                         <button class="btn-icon" title="Excluir">
@@ -575,6 +575,22 @@
 
         </div>
     </main>
+
+    <div id="modalDetalhes" class="modal-fundo" style="display: none;">
+        <div class="modal-box" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 id="detalheTitulo">Detalhes do Registro</h3>
+                <button type="button" onclick="fecharModalDetalhes()" class="btn-fechar-modal">✖</button>
+            </div>
+            <div class="modal-body">
+                <div id="detalheConteudo" class="grid-form">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="fecharModalDetalhes()" class="btn-primario">Fechar</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../js/produtos.js"></script>
     <script src="../js/clientes.js"></script>

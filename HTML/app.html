@@ -320,24 +320,42 @@
             <section id="sec-clientes" class="secao-tela">
                 <h2 class="titulo-secao">Clientes</h2>
 
+                <div id="painelFiltrosCliente" class="toolbar-rnx"
+                    style="display: none; background: #f1f5f9; flex-direction: column; padding: 15px; gap: 10px; margin-bottom: 15px;">
+                    <div class="grid-form">
+                        <div class="campo">
+                            <label>Status na Loja</label>
+                            <select id="filtroClienteStatus" class="input-padrao">
+                                <option value="">Todos (Clientes e Prospectos)</option>
+                                <option value="comprador">Já comprou na loja</option>
+                                <option value="prospecto">Prospectos (Ainda não compraram)</option>
+                            </select>
+                        </div>
+                        <div class="campo" style="display: flex; align-items: flex-end;">
+                            <button class="btn-primario" id="btnAplicarFiltroCliente" style="width: 100%;">Aplicar
+                                Filtros</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="toolbar-rnx">
                     <div class="toolbar-acoes">
                         <button class="btn-icon" id="btnAbrirModalCliente" title="Adicionar">
                             <span class="material-symbols-outlined">add</span>
                         </button>
-                        <button class="btn-icon" title="Editar">
+                        <button class="btn-icon" id="btnEditarClienteToolbar" title="Editar">
                             <span class="material-symbols-outlined">edit</span>
                         </button>
                         <button class="btn-icon" id="btnVisualizarCliente" title="Visualizar Detalhes">
                             <span class="material-symbols-outlined">visibility</span>
                         </button>
-                        <button class="btn-icon" title="Excluir">
+                        <button class="btn-icon" id="btnExcluirClienteToolbar" title="Excluir">
                             <span class="material-symbols-outlined">delete</span>
                         </button>
-                        <button class="btn-icon" title="Recarregar">
+                        <button class="btn-icon" id="btnRecarregarClienteToolbar" title="Recarregar">
                             <span class="material-symbols-outlined">refresh</span>
                         </button>
-                        <button class="btn-icon" title="Filtros Avançados">
+                        <button class="btn-icon" id="btnAbrirFiltrosCliente" title="Filtros Avançados">
                             <span class="material-symbols-outlined">filter_list</span>
                         </button>
                     </div>

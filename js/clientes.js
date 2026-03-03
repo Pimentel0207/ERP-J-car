@@ -128,6 +128,49 @@
             }
         });
     }
+    // ==========================================
+    // 4.5. LÓGICA DE FILTROS AVANÇADOS (CLIENTES)
+    // ==========================================
+    const btnAbrirFiltrosCliente = document.getElementById('btnAbrirFiltrosCliente');
+    const painelFiltrosCliente = document.getElementById('painelFiltrosCliente');
+    const btnAplicarFiltroCliente = document.getElementById('btnAplicarFiltroCliente');
+
+    if (btnAbrirFiltrosCliente && painelFiltrosCliente && btnAplicarFiltroCliente) {
+
+        // 1. Mostrar/Esconder o painel
+        btnAbrirFiltrosCliente.addEventListener('click', () => {
+            if (painelFiltrosCliente.style.display === 'none' || painelFiltrosCliente.style.display === '') {
+                painelFiltrosCliente.style.display = 'flex';
+            } else {
+                painelFiltrosCliente.style.display = 'none';
+            }
+        });
+
+        // 2. Aplicar o filtro na memória
+        btnAplicarFiltroCliente.addEventListener('click', () => {
+            const statusSelecionado = document.getElementById('filtroClienteStatus').value;
+
+            const clientesFiltrados = todosOsClientes.filter(cliente => {
+                // Se a opção for vazia ("Todos"), passa direto
+                if (statusSelecionado === "") return true;
+
+                // Se escolheu 'comprador', o campo veiculo_comprado deve ter algo salvo no banco
+                if (statusSelecionado === "comprador") {
+                    return cliente.veiculo_comprado && cliente.veiculo_comprado.trim() !== "";
+                }
+
+                // Se escolheu 'prospecto', o campo veiculo_comprado é nulo ou vazio
+                if (statusSelecionado === "prospecto") {
+                    return !cliente.veiculo_comprado || cliente.veiculo_comprado.trim() === "";
+                }
+
+                return true;
+            });
+
+            // Re-renderiza a tabela só com o resultado
+            renderizarTabela(clientesFiltrados);
+        });
+    }
 
     // ==========================================
     // 5. SALVAR NO BANCO

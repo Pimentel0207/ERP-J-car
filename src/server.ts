@@ -327,17 +327,17 @@ app.post('/vendas', (req, res) => {
 });
 
 // ---------------------------------------------------------
-// 4. HISTÓRICO DE VENDAS (Cruza Dados de 3 Tabelas)
+// 4. HISTÓRICO DE VENDAS (AGORA COM FILTROS DE DATA E VALOR)
 // ---------------------------------------------------------
 app.get('/vendas', (req, res) => {
-    // O comando JOIN une a tabela VENDAS com CLIENTES e CARROS
-    const sql = `
+    // Captura os filtros enviados pelo front-end
+    const { mes, valorMin } = req.query;
+
+    let sql = `
         SELECT 
             v.id AS venda_id,
             v.valor_total,
             v.condicao_pagamento,
-            v.valor_entrada,
-            v.qtd_parcelas,
             v.data_venda,
             c.nome AS cliente_nome,
             car.marca,
@@ -346,12 +346,28 @@ app.get('/vendas', (req, res) => {
         FROM vendas v
         JOIN clientes c ON v.cliente_id = c.id
         JOIN carros car ON v.carro_id = car.id
-        ORDER BY v.data_venda DESC
+        WHERE 1=1
     `;
 
-    conexao.query(sql, (erro, resultados) => {
+    const params: any[] = [];
+
+    // Filtro por Mês (YYYY-MM) utilizando a função DATE_FORMAT do MySQL
+    if (mes) {
+        sql += ` AND DATE_FORMAT(v.data_venda, '%Y-%m') = ?`;
+        params.push(mes);
+    }
+
+    // Filtro por Valor Mínimo da Venda
+    if (valorMin) {
+        sql += ` AND v.valor_total >= ?`;
+        params.push(Number(valorMin));
+    }
+
+    sql += ` ORDER BY v.data_venda DESC`;
+
+    conexao.query(sql, params, (erro, resultados) => {
         if (erro) {
-            console.error('Erro ao buscar histórico de vendas:', erro);
+            console.error('Erro ao buscar histórico filtrado:', erro);
             return res.status(500).json({ mensagem: 'Erro ao buscar histórico.' });
         }
         res.status(200).json(resultados);
@@ -359,35 +375,41 @@ app.get('/vendas', (req, res) => {
 });
 
 // ---------------------------------------------------------
-// 5. MÓDULO FINANCEIRO (COMISSÕES E RELATÓRIO)
+// 5. MÓDULO FINANCEIRO (COM FILTROS PARA RELATÓRIOS)
 // ---------------------------------------------------------
 app.get('/comissoes', (req, res) => {
-    // 🚨 Nova Consulta (Trás tudo: Pendente e Pago, separando os valores)
-    const sql = `
+    const { mes, minPreco } = req.query;
+
+    let sql = `
         SELECT 
             u.email AS vendedor,
             u.id AS vendedor_id,
             COUNT(v.id) AS qtd_vendas,
             SUM(v.valor_total) AS total_vendido,
-            
-            -- Pega o status da última venda ou define se tem pendência
             MAX(v.status_comissao) AS status_pagamento, 
-            
-            -- Soma SÓ as comissões que ainda estão Pendentes
-            SUM(CASE WHEN v.status_comissao = 'Pendente' THEN v.valor_total * 0.01 ELSE 0 END) AS comissao_total,
-            
-            -- Soma SÓ as comissões que já foram Pagas (Para histórico)
-            SUM(CASE WHEN v.status_comissao = 'Pago' THEN v.valor_total * 0.01 ELSE 0 END) AS comissao_paga
-            
+            SUM(CASE WHEN v.status_comissao = 'Pendente' THEN v.valor_total * 0.01 ELSE 0 END) AS comissao_total
         FROM usuarios u
         JOIN vendas v ON u.id = v.vendedor_id
-        GROUP BY u.id
-        ORDER BY total_vendido DESC
+        WHERE 1=1
     `;
 
-    conexao.query(sql, (erro, resultados) => {
+    const params: any[] = [];
+
+    if (mes) {
+        sql += ` AND DATE_FORMAT(v.data_venda, '%Y-%m') = ?`;
+        params.push(mes);
+    }
+
+    if (minPreco) {
+        sql += ` AND v.valor_total >= ?`;
+        params.push(Number(minPreco));
+    }
+
+    sql += ` GROUP BY u.id ORDER BY total_vendido DESC`;
+
+    conexao.query(sql, params, (erro, resultados) => {
         if (erro) {
-            console.error('Erro ao calcular comissões:', erro);
+            console.error('Erro ao calcular comissões filtradas:', erro);
             return res.status(500).json({ mensagem: 'Erro ao calcular comissões.' });
         }
         res.status(200).json(resultados);

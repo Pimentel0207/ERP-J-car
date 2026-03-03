@@ -51,7 +51,7 @@
     }
 
     // ==========================================
-    // 4. LÓGICA DA TOOLBAR
+    // 4. LÓGICA DA TOOLBAR (PROTEÇÃO CONTRA NULL)
     // ==========================================
 
     // --- BUSCA RÁPIDA (TEXTO) ---
@@ -70,7 +70,7 @@
     // --- IMPRIMIR ---
     if (btnImprimirHistorico) {
         btnImprimirHistorico.addEventListener('click', () => {
-            const mes = inputFiltroMes.value || "Geral";
+            const mes = inputFiltroMes?.value || "Geral";
             const tituloOriginal = document.title;
             document.title = `Relatorio_Vendas_JCAR_${mes}`;
             window.print();
@@ -85,23 +85,17 @@
             if (!idVenda) return;
 
             const venda = todasAsVendas.find(v => v.venda_id == idVenda);
-            if (venda) {
-                // Monta o objeto para a função global no app.js
+            if (venda && typeof abrirVisualizacao === 'function') {
                 const dadosDaVenda = {
                     id: venda.venda_id,
                     data: new Date(venda.data_venda).toLocaleString('pt-BR'),
-                    vendedor: "Vendedor da Venda", // Será ajustado quando a tabela vendas tiver o nome
+                    vendedor: "Vendedor da Venda",
                     veiculo: `${venda.marca} ${venda.modelo} (${venda.ano})`,
                     valor: Number(venda.valor_total).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
-                    comissao: (Number(venda.valor_total) * 0.01).toLocaleString('pt-BR', { minimumFractionDigits: 2 }), // Calculando 1% na tela
+                    comissao: (Number(venda.valor_total) * 0.01).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
                     obs: `Forma de Pgto: ${venda.condicao_pagamento.toUpperCase()} | Entrada: R$ ${Number(venda.valor_entrada).toLocaleString('pt-BR')}`
                 };
-
-                if (typeof abrirVisualizacao === 'function') {
-                    abrirVisualizacao('venda', dadosDaVenda);
-                } else {
-                    console.error("Função abrirVisualizacao não encontrada.");
-                }
+                abrirVisualizacao('venda', dadosDaVenda);
             }
         });
     }
@@ -109,26 +103,13 @@
     // --- ESTORNAR (ADMIN ONLY) ---
     if (btnEstornarToolbar) {
         btnEstornarToolbar.addEventListener('click', async () => {
-            if (!isAdmin) {
-                alert("🔒 Acesso Negado: Apenas administradores podem estornar vendas.");
-                return;
-            }
-
+            if (!isAdmin) return alert("🔒 Acesso Negado: Apenas administradores podem estornar vendas.");
             const idVenda = obterIdVendaSelecionada();
-            if (!idVenda) return;
-
-            if (confirm("⚠️ ATENÇÃO: Deseja cancelar esta venda? O carro voltará para o estoque disponível.")) {
+            if (idVenda && confirm("⚠️ ATENÇÃO: Deseja cancelar esta venda? O carro voltará para o estoque disponível.")) {
                 try {
                     const res = await fetch(`http://localhost:3000/vendas/${idVenda}`, { method: 'DELETE' });
-                    if (res.ok) {
-                        alert("✅ Venda cancelada com sucesso! O veículo retornou ao estoque.");
-                        carregarVendidos(); // Atualiza sem F5
-                    } else {
-                        alert("❌ Erro ao estornar a venda.");
-                    }
-                } catch (erro) {
-                    console.error("Erro:", erro);
-                }
+                    if (res.ok) { alert("✅ Venda cancelada!"); carregarVendidos(); }
+                } catch (erro) { console.error("Erro:", erro); }
             }
         });
     }
@@ -136,45 +117,31 @@
     // --- RECARREGAR ---
     if (btnRecarregarHistorico) {
         btnRecarregarHistorico.addEventListener('click', () => {
-            const icone = btnRecarregarHistorico.querySelector('.material-symbols-outlined');
-            if (icone) {
-                icone.style.transition = "transform 0.5s ease";
-                icone.style.transform = "rotate(360deg)";
-                setTimeout(() => { icone.style.transform = "rotate(0deg)"; }, 500);
-            }
-            inputBuscaHistorico.value = '';
-            carregarVendidos(); // Traz tudo novamente
+            if (inputBuscaHistorico) inputBuscaHistorico.value = '';
+            carregarVendidos();
         });
     }
 
-    // --- FILTROS AVANÇADOS (ABRIR PAINEL) ---
-    if (btnAbrirFiltrosHistorico && painelFiltrosHistorico) {
+    // --- FILTROS AVANÇADOS (ABRIR MODAL) ---
+    if (btnAbrirFiltrosHistorico) {
         btnAbrirFiltrosHistorico.addEventListener('click', () => {
-            painelFiltrosHistorico.style.display = painelFiltrosHistorico.style.display === 'none' || painelFiltrosHistorico.style.display === '' ? 'flex' : 'none';
+            if (painelFiltrosHistorico) {
+                painelFiltrosHistorico.style.display = painelFiltrosHistorico.style.display === 'none' ? 'flex' : 'none';
+            }
         });
     }
 
-    // --- APLICAR FILTRO NO BACKEND ---
+    // --- APLICAR FILTRO ---
     if (btnAplicarFiltroHistorico) {
         btnAplicarFiltroHistorico.addEventListener('click', async () => {
-            const mes = inputFiltroMes.value;
-            const valorMin = inputFiltroValor.value;
-
-            // Monta a URL dinamicamente com os parâmetros preenchidos
-            let url = 'http://localhost:3000/vendas?';
-            if (mes) url += `mes=${mes}&`;
-            if (valorMin) url += `valorMin=${valorMin}`;
-
+            const mes = inputFiltroMes?.value;
+            const valorMin = inputFiltroValor?.value;
+            let url = `http://localhost:3000/vendas?mes=${mes}&valorMin=${valorMin}`;
             try {
-                // Vai no banco buscar já filtrado
                 const res = await fetch(url);
                 todasAsVendas = await res.json();
-
-                // Renderiza a nova lista
                 renderizarTabelaHistorico(todasAsVendas);
-            } catch (err) {
-                console.error("Erro ao filtrar histórico no back-end:", err);
-            }
+            } catch (err) { console.error("Erro ao filtrar:", err); }
         });
     }
 

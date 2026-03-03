@@ -59,113 +59,69 @@
     }
 
     // ==========================================
-    // 4. LÓGICA DA TOOLBAR
+    // 4. LÓGICA DA TOOLBAR (PROTEÇÃO CONTRA NULL)
     // ==========================================
 
-    // --- BUSCA RÁPIDA (TEXTO) ---
     if (inputBuscaComissao) {
         inputBuscaComissao.addEventListener('input', (evento) => {
             const termo = evento.target.value.toLowerCase();
-            const filtrados = todosDadosComissoes.filter(item => {
-                return item.vendedor.toLowerCase().includes(termo);
-            });
+            const filtrados = todosDadosComissoes.filter(item => item.vendedor.toLowerCase().includes(termo));
             renderizarTabelaComissoes(filtrados);
         });
     }
 
-    // --- DAR BAIXA NA COMISSÃO (ADMIN ONLY) ---
     if (btnPagarToolbar) {
         btnPagarToolbar.addEventListener('click', async () => {
-            if (!isComissoesAdmin) {
-                alert("🔒 Acesso Negado: Apenas o departamento financeiro/admin pode dar baixa em comissões.");
-                return;
-            }
-
+            if (!isComissoesAdmin) return alert("🔒 Acesso Negado.");
             const vendedorSelecionado = obterVendedorSelecionadoParaBaixa();
-            if (!vendedorSelecionado) return;
-
-            if (confirm(`Confirmar o pagamento (Baixa Financeira) das comissões pendentes para o vendedor ${vendedorSelecionado.nome}?`)) {
+            if (vendedorSelecionado && confirm(`Confirmar o pagamento para ${vendedorSelecionado.nome}?`)) {
                 try {
                     const res = await fetch(`http://localhost:3000/vendedores/${vendedorSelecionado.id}/pagar-comissoes`, { method: 'PUT' });
-                    if (res.ok) {
-                        alert("✅ Pagamento registrado com sucesso! O sistema atualizará os status.");
-                        carregarComissoes(); // Atualiza sem F5
-                    } else {
-                        alert("❌ Erro ao processar pagamento no servidor.");
-                    }
-                } catch (erro) {
-                    console.error("Erro ao pagar:", erro);
-                }
+                    if (res.ok) { alert("✅ Pagamento registrado!"); carregarComissoes(); }
+                } catch (erro) { console.error("Erro ao pagar:", erro); }
             }
         });
     }
 
-    // --- RECARREGAR ---
     if (btnRecarregarComissoes) {
         btnRecarregarComissoes.addEventListener('click', () => {
-            const icone = btnRecarregarComissoes.querySelector('.material-symbols-outlined');
-            if (icone) {
-                icone.style.transition = "transform 0.5s ease";
-                icone.style.transform = "rotate(360deg)";
-                setTimeout(() => { icone.style.transform = "rotate(0deg)"; }, 500);
-            }
-            inputBuscaComissao.value = '';
+            if (inputBuscaComissao) inputBuscaComissao.value = '';
             carregarComissoes();
         });
     }
 
-    // --- IMPRIMIR PDF ---
     if (btnImprimirPDF) {
         btnImprimirPDF.addEventListener('click', () => {
-            const mes = inputFiltroRelatorioMes ? inputFiltroRelatorioMes.value || "Geral" : "Geral";
+            const mes = inputFiltroRelatorioMes?.value || "Geral";
             const tituloOriginal = document.title;
-            // Título dinâmico para o arquivo PDF gerado pelo navegador
             document.title = `Fechamento_Comissoes_JCAR_${mes}`;
             window.print();
             document.title = tituloOriginal;
         });
     }
 
-    // --- FILTROS AVANÇADOS (ABRIR PAINEL) ---
-    if (btnAbrirFiltrosRelatorio && painelFiltrosRelatorio) {
+    if (btnAbrirFiltrosRelatorio) {
         btnAbrirFiltrosRelatorio.addEventListener('click', () => {
-            painelFiltrosRelatorio.style.display = painelFiltrosRelatorio.style.display === 'none' || painelFiltrosRelatorio.style.display === '' ? 'flex' : 'none';
-        });
-    }
-
-    // --- APLICAR FILTRO (BACKEND) ---
-    if (btnAplicarFiltroRelatorio) {
-        btnAplicarFiltroRelatorio.addEventListener('click', async () => {
-            const mes = inputFiltroRelatorioMes.value;
-            const precoMin = inputFiltroRelatorioPreco.value;
-
-            // Monta a URL dinamicamente para bater na rota correta do server.ts
-            let url = 'http://localhost:3000/comissoes?';
-            if (mes) url += `mes=${mes}&`;
-            if (precoMin) url += `minPreco=${precoMin}`;
-
-            try {
-                const res = await fetch(url);
-                const dadosFiltrados = await res.json();
-
-                // Sobrescreve a lista na memória e manda renderizar
-                todosDadosComissoes = dadosFiltrados;
-
-                // Se não for admin, garante que veja apenas o dele mesmo após filtrar
-                if (!isComissoesAdmin) {
-                    todosDadosComissoes = todosDadosComissoes.filter(d => d.vendedor_id === usuarioLogadoComissoes.id);
-                }
-
-                renderizarTabelaComissoes(todosDadosComissoes);
-
-                // Opcional: fechar painel após aplicar
-                // painelFiltrosRelatorio.style.display = 'none';
-            } catch (err) {
-                console.error("Erro ao aplicar filtros nas comissões:", err);
+            if (painelFiltrosRelatorio) {
+                painelFiltrosRelatorio.style.display = painelFiltrosRelatorio.style.display === 'none' ? 'flex' : 'none';
             }
         });
     }
 
+    if (btnAplicarFiltroRelatorio) {
+        btnAplicarFiltroRelatorio.addEventListener('click', async () => {
+            const mes = inputFiltroRelatorioMes?.value;
+            const precoMin = inputFiltroRelatorioPreco?.value;
+            try {
+                const res = await fetch(`http://localhost:3000/comissoes?mes=${mes}&minPreco=${precoMin}`);
+                todosDadosComissoes = await res.json();
+                if (!isComissoesAdmin) {
+                    todosDadosComissoes = todosDadosComissoes.filter(d => d.vendedor_id === usuarioLogadoComissoes.id);
+                }
+                renderizarTabelaComissoes(todosDadosComissoes);
+            } catch (err) { console.error("Erro ao filtrar:", err); }
+        });
+    }
     // ==========================================
     // 5. CARREGAR E RENDERIZAR
     // ==========================================

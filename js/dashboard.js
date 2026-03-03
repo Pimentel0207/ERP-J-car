@@ -104,3 +104,40 @@ document.getElementById('btnImprimirDash').addEventListener('click', () => {
 
     document.title = tituloOriginal;
 });
+
+// ==========================================
+// 5. VIDA À TOOLBAR DO DASHBOARD
+// ==========================================
+
+// O botão de imprimir já está configurado, mas vamos garantir que ele limpe o título
+document.getElementById('btnImprimirDash').addEventListener('click', () => {
+    const tituloOriginal = document.title;
+    document.title = "Relatorio_Dashboard_JCAR_" + new Date().toLocaleDateString().replace(/\//g, '-');
+    window.print();
+    document.title = tituloOriginal;
+});
+
+// NOVO: Selecionar o botão de recarregar da Toolbar do Dashboard
+// No seu HTML ele está como: onclick="location.reload()"
+// Vamos substituir essa lógica por uma atualização inteligente sem F5!
+const btnUpdateDash = document.querySelector('#sec-dashboard [title="Atualizar Dados"]');
+
+if (btnUpdateDash) {
+    // Removemos o atributo antigo do HTML via JS para não haver conflito
+    btnUpdateDash.removeAttribute('onclick');
+
+    btnUpdateDash.addEventListener('click', () => {
+        console.log("🔄 Atualizando dados do Dashboard...");
+
+        // Adiciona um efeito visual de girar no ícone (opcional, mas profissional)
+        const icone = btnUpdateDash.querySelector('.material-symbols-outlined');
+        icone.style.transition = "transform 0.5s ease";
+        icone.style.transform = "rotate(360deg)";
+
+        // Chama a função que já criamos para buscar os dados no servidor novamente!
+        carregarDashboard();
+
+        // Reseta o ícone após a animação
+        setTimeout(() => { icone.style.transform = "rotate(0deg)"; }, 500);
+    });
+}

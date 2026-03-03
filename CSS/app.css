@@ -1228,3 +1228,26 @@ body.modo-spa {
 .btn-primario:hover {
     background: #1d4ed8;
 }
+
+/* --- CONTROLE DO MENU MOBILE --- */
+
+/* Exibe o botão apenas em telas menores que 1000px */
+@media (max-width: 1000px) {
+    #btnMenuMobile {
+        display: block !important;
+    }
+
+    /* Esconde a sidebar completamente por padrão no mobile */
+    .sidebar {
+        position: fixed;
+        left: -220px;
+        /* Joga para fora da tela */
+        transition: left 0.3s ease;
+        z-index: 9999;
+    }
+
+    /* Classe que o JS vai colocar para mostrar o menu */
+    .sidebar.mobile-aberto {
+        left: 0;
+    }
+}

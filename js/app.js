@@ -107,3 +107,15 @@ function abrirVisualizacaoCliente(dados) {
 
     document.getElementById('modalDetalhes').style.display = 'flex';
 }
+
+document.getElementById('btnMenuMobile').addEventListener('click', () => {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('mobile-aberto');
+});
+
+// Fecha o menu automaticamente ao clicar em qualquer item (melhora a navegação mobile)
+document.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', () => {
+        document.querySelector('.sidebar').classList.remove('mobile-aberto');
+    });
+});

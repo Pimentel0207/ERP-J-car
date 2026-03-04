@@ -41,7 +41,10 @@
         idClienteSendoEditado = null;
         document.getElementById('cadNome').value = '';
         document.getElementById('cadDocumento').value = '';
+        document.getElementById('cadNascimento').value = '';
         document.getElementById('cadTelefone').value = '';
+        document.getElementById('cadEmail').value = '';
+        document.getElementById('cadEndereco').value = '';
     }
 
     btnAbrirModal.addEventListener('click', () => {
@@ -66,6 +69,12 @@
     }
 
     // --- AÇÃO: EDITAR ---
+    function obterIdSelecionadoCliente() {
+        const checkbox = document.querySelector('#tabelaClientesBody .check-cliente:checked');
+        if (!checkbox) { alert("⚠️ Selecione um CLIENTE na tabela primeiro!"); return null; }
+        return checkbox.value;
+    }
+
     if (btnEditarToolbar) {
         btnEditarToolbar.addEventListener('click', () => {
             const id = obterIdSelecionadoCliente();
@@ -77,6 +86,15 @@
                 document.getElementById('cadNome').value = cliente.nome;
                 document.getElementById('cadDocumento').value = cliente.documento;
                 document.getElementById('cadTelefone').value = cliente.telefone || '';
+                document.getElementById('cadEmail').value = cliente.email || '';
+                document.getElementById('cadEndereco').value = cliente.endereco || '';
+
+                // Formata a data para o padrão do campo <input type="date">
+                if (cliente.data_nascimento) {
+                    document.getElementById('cadNascimento').value = cliente.data_nascimento.split('T')[0];
+                } else {
+                    document.getElementById('cadNascimento').value = '';
+                }
 
                 modalCliente.style.display = "flex";
             }
@@ -185,15 +203,27 @@
             return;
         }
 
+        // Se estivermos editando, resgatamos os dados de compra para não apagá-los do banco!
+        let ultimaCompraSalva = null;
+        let veiculoCompradoSalvo = null;
+
+        if (idClienteSendoEditado !== null) {
+            const clienteAntigo = todosOsClientes.find(c => c.id == idClienteSendoEditado);
+            if (clienteAntigo) {
+                ultimaCompraSalva = clienteAntigo.data_ultima_compra ? clienteAntigo.data_ultima_compra.split('T')[0] : null;
+                veiculoCompradoSalvo = clienteAntigo.veiculo_comprado || null;
+            }
+        }
+
         const pacoteCliente = {
             nome: nome,
             documento: documento,
-            telefone: document.getElementById('cadTelefone').value,
-            data_nascimento: null,
-            email: null,
-            endereco: null,
-            data_ultima_compra: null,
-            veiculo_comprado: null
+            telefone: document.getElementById('cadTelefone').value || null,
+            data_nascimento: document.getElementById('cadNascimento').value || null,
+            email: document.getElementById('cadEmail').value || null,
+            endereco: document.getElementById('cadEndereco').value || null,
+            data_ultima_compra: ultimaCompraSalva,
+            veiculo_comprado: veiculoCompradoSalvo
         };
 
         try {

@@ -3,36 +3,44 @@ const password = document.getElementById("password");
 const form = document.querySelector("form");
 const erro = document.querySelector(".erro");
 
-form.addEventListener("submit", async (evento) => {
-    evento.preventDefault();
-    erro.style.display = "none";
+// PROTEÇÃO: Só adiciona o evento se o formulário existir na tela
+if (form) {
+    form.addEventListener("submit", async (evento) => {
+        evento.preventDefault();
 
-    try {
-        // Pede permissão para o Backend
-        const resposta = await fetch('http://localhost:3000/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email: email.value,
-                password: password.value
-            })
-        });
+        if (erro) erro.style.display = "none";
 
-        const dados = await resposta.json();
+        try {
+            // Pede permissão para o Backend
+            const resposta = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: email.value,
+                    password: password.value
+                })
+            });
 
-        if (resposta.ok) {
-            // ✅ Salva no navegador
-            localStorage.setItem('usuarioLogado', JSON.stringify(dados.usuario));
+            const dados = await resposta.json();
 
-            // ✅ A PORTA DE ENTRADA CORRETA:
-            window.location.href = "app.html";
-        } else {
-            // 🚨 FALTAVA ISSO: Mostra o erro se o usuário ou senha estiverem errados!
-            erro.textContent = dados.mensagem || "E-mail ou senha incorretos.";
-            erro.style.display = "block";
+            if (resposta.ok) {
+                // ✅ Salva no navegador
+                localStorage.setItem('usuarioLogado', JSON.stringify(dados.usuario));
+
+                // ✅ A PORTA DE ENTRADA CORRETA:
+                window.location.href = "app.html";
+            } else {
+                // 🚨 Mostra o erro se o usuário ou senha estiverem errados!
+                if (erro) {
+                    erro.textContent = dados.mensagem || "E-mail ou senha incorretos.";
+                    erro.style.display = "block";
+                }
+            }
+        } catch (error) {
+            if (erro) {
+                erro.textContent = "Erro de conexão com o servidor.";
+                erro.style.display = "block";
+            }
         }
-    } catch (error) {
-        erro.textContent = "Erro de conexão com o servidor.";
-        erro.style.display = "block";
-    }
-});
+    });
+}

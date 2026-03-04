@@ -12,9 +12,10 @@
     const corpoTabela = document.getElementById('tabelaClientesBody');
 
     // Botões da Toolbar (Seletores mais específicos para evitar conflitos)
-    const btnEditarToolbar = document.querySelector('#sec-clientes button[title="Editar"]');
-    const btnExcluirToolbar = document.querySelector('#sec-clientes button[title="Excluir"]');
-    const btnRecarregarToolbar = document.querySelector('#sec-clientes button[title="Recarregar"]');
+    // Botões da Toolbar (Agora usando os IDs diretos e seguros do HTML)
+    const btnEditarToolbar = document.getElementById('btnEditarClienteToolbar');
+    const btnExcluirToolbar = document.getElementById('btnExcluirClienteToolbar');
+    const btnRecarregarToolbar = document.getElementById('btnRecarregarClienteToolbar');
     const btnVisualizarCliente = document.getElementById('btnVisualizarCliente');
 
     let idClienteSendoEditado = null;

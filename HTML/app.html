@@ -2,6 +2,13 @@
 <html lang="pt-BR">
 
 <head>
+    <script>
+        // BLOQUEIO DE ROTA: Checa se o usuário está logado ANTES de carregar a página
+        if (!localStorage.getItem('usuarioLogado')) {
+            // Se não estiver logado, chuta ele para a tela de login
+            window.location.href = "login.html";
+        }
+    </script>
     <meta charset="UTF-8">
     <title>J-Car ERP 2.0</title>
     <link rel="stylesheet" href="../CSS/app.css">
@@ -708,9 +715,6 @@
     <script src="../js/comissoes.js"></script>
     <script src="../js/acessos.js"></script>
     <script src="../js/dashboard.js"></script>
-    <script src="../js/login.js"></script>
-
-
 </body>
 
 </html>

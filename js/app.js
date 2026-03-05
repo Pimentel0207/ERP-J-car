@@ -1,15 +1,12 @@
-// 1. Verifica Acesso e Boas-Vindas
+// 1. Pega os dados do usuário que logou
 const usuarioString = localStorage.getItem('usuarioLogado');
+const usuario = JSON.parse(usuarioString);
 
-if (!usuarioString) {
-    window.location.href = "login.html";
-} else {
-    const usuario = JSON.parse(usuarioString);
-    document.getElementById('nomeUsuarioLogado').textContent = usuario.nome || usuario.email;
+// 2. Mostra o nome e libera o menu do admin (se for o caso)
+document.getElementById('nomeUsuarioLogado').textContent = usuario.nome || usuario.email;
 
-    if (usuario.email === 'joao@evoplan.com') {
-        document.getElementById('btnAdmin').style.display = "flex";
-    }
+if (usuario.email === 'joao@evoplan.com') {
+    document.getElementById('btnAdmin').style.display = "flex";
 }
 
 // 2. A Mágica de Navegar (SPA) - BLINDADA

@@ -18,20 +18,14 @@ Estamos migrando o sistema para uma arquitetura escalável e segura, focando em:
 - **Componentização Profissional:** Transição do DOM manual para componentes React.
 - **Vite:** Build ultra-rápido e DX modernizada.
 
-### 🐍 Back-end (Python + FastAPI/Flask)
-- **API Monolítica:** Arquitetura sólida e unificada para fácil manutenção.
-- **Segurança Nativa:** Implementação de autenticação e proteção OWASP via Python.
+### 🐍 Back-end (Python + FastAPI)
+- **API Monolítica:** Arquitetura sólida, moderna e de alto desempenho.
+- **Segurança Nativa:** Proteção OWASP total via Pydantic e JWT.
+- **Auto-Documentação:** Swagger automático (`/docs`) para fácil desenvolvimento.
 
-### 📂 Estrutura de Pastas (Front & Back)
-O projeto será dividido de forma clara para separar responsabilidades:
-```text
-/
-├── back/                # Servidor Python (API Monolítica)
-├── front/               # Aplicação React (Interface)
-├── docs/                # Documentação técnica
-├── planejamento/        # Roteiros de migração e arquitetura
-└── README.md
-```
+### 🐘 Banco de Dados (PostgreSQL)
+- **DBeaver:** Gestor oficial do banco de dados do sistema.
+- **Relacional:** Maior robustez e integridade de dados para gestão automotiva.
 
 ---
 
@@ -41,9 +35,19 @@ O projeto será dividido de forma clara para separar responsabilidades:
 - **CRM Completo:** Gestão de clientes e histórico de compras.
 - **Financeiro:** Cálculo automático de comissões e gestão de metas.
 
+### 📂 Estrutura de Pastas (Front & Back)
+O projeto será dividido de forma clara para separar responsabilidades:
+```text
+/
+├── back/                # FastAPI (Python 3.10+)
+├── front/               # React + Vite
+├── docs/                # Documentação técnica
+├── planejamento/        # Roteiros de migração e arquitetura
+└── README.md
+```
 ---
 
-## 🛠️ Stack Tecnológica Atual
+## 🛠️ Stack Tecnológica Atual (Legado)
 - **Front-end:** Vanilla JS, HTML5, CSS3, Chart.js.
 - **Back-end:** Node.js, Express.js.
 - **DB:** MySQL.

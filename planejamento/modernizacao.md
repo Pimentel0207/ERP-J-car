@@ -34,9 +34,5 @@ Segurança não é opcional. Vamos focar nos seguintes pontos do OWASP:
 
 ---
 
-## Próximos Passos (Checklist)
-- [ ] Criar a estrutura de pastas `back/` e `front/`.
-- [ ] Setup do **Vite + React** na pasta `front/`.
-- [ ] Setup do **FastAPI + PostgreSQL** na pasta `back/`.
-- [ ] Conectar ao DB via **DBeaver** para criar as tabelas.
-- [ ] Implementar primeira rota de Login segura.
+### Próximos Passos (Estrutura)
+Para o cronograma detalhado das entregas, acesse o nosso guia de [Fases e Prioridades](fases_prioridades.md).

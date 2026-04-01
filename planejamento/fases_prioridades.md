@@ -18,12 +18,12 @@ Este documento define a ordem de implementação para a modernização do **J-Ca
 
 ### Fase 1: Alicerce Técnico (Iniciação)
 *Foco: Infraestrutura e Segurança*
-- [ ] **Ambiente**: Criação das pastas `/front` e `/back`.
-- [ ] **Backend**: Setup FastAPI + Conexão PostgreSQL + Migrations iniciais.
-- [ ] **Frontend**: Setup Vite + React + Tailwind + Estrutura de Rotas.
+- [ ] **Ambiente**: Criação das pastas `/front` e `/back` e configuração dos arquivos `.env.example`.
+- [ ] **DevOps**: Setup do **Docker Compose** para gerenciar o PostgreSQL em container.
+- [ ] **Backend**: Setup FastAPI + Conexão DB + Migrations + **Pytest** para automação de testes.
+- [ ] **Frontend**: Setup `npm create vite@latest` + React + Tailwind + Estrutura de Rotas.
 - [ ] **Segurança (OWASP)**: Implementação de Bcrypt (Hash) e JWT (Tokens).
-- [ ] **Login**: Tela de login funcional integrada ao backend.
-
+- [ ] **Login**: Tela de login funcional integrada ao backend (Primeiro teste Pytest).
 ### Fase 2: Gestão de Ativos (Módulo Estoque)
 *Foco: O Produto*
 - [ ] **Banco**: Tabela `veiculos` finalizada no PostgreSQL (DBeaver).
@@ -47,6 +47,6 @@ Este documento define a ordem de implementação para a modernização do **J-Ca
 ---
 
 ## 🛠️ Próximas Ações Imediatas
-1.  Executar o script de criação de pastas.
-2.  Inicializar o `npm init` no front e o `venv` no back.
-3.  Definir a primeira tabela no DBeaver.
+1.  Estruturação de Pastas e repositório.
+2.  Criação do `docker-compose.yml` para rodar o PostgreSQL de imediato.
+3.  Executar `npm create vite@latest front` e `python -m venv back/venv`.

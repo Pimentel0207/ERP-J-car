@@ -25,7 +25,9 @@ Estrutura redefinida para o PostgreSQL visando integridade e escalabilidade.
 *   `email`: VARCHAR(150) UNIQUE
 *   `senha_hash`: TEXT (Armazenamento seguro com Salt)
 *   `role`: ENUM('admin', 'vendedor')
+*   `ativo`: BOOLEAN (Default TRUE - Soft Delete)
 *   `criado_em`: TIMESTAMP (Default NOW())
+*   `atualizado_em`: TIMESTAMP (Default NOW())
 
 ### 2.2 Tabela `estoque_veiculos`
 *   `id`: SERIAL (PK)
@@ -44,6 +46,7 @@ Estrutura redefinida para o PostgreSQL visando integridade e escalabilidade.
 *   `email`: VARCHAR(150)
 *   `telefone`: VARCHAR(20)
 *   `data_ultima_compra`: DATE (Nullable)
+*   `ativo`: BOOLEAN (Default TRUE - Soft Delete)
 
 ### 2.4 Tabela `vendas`
 *   `id`: SERIAL (PK)
@@ -53,6 +56,8 @@ Estrutura redefinida para o PostgreSQL visando integridade e escalabilidade.
 *   `valor_total`: DECIMAL(12, 2)
 *   `valor_entrada`: DECIMAL(12, 2)
 *   `comissao_valor`: DECIMAL(10, 2) (1% fixo calculado pelo Backend)
+*   `data_venda`: TIMESTAMP (Default NOW())
+*   `status_venda`: ENUM('concluida', 'cancelada', 'estornada')
 *   `status_comissao`: ENUM('pendente', 'pago')
 
 ---
@@ -85,12 +90,20 @@ A segurança e a privacidade dos dados da empresa e dos usuários são inegociá
 │   │   ├── services/    # Chamadas Axios à API
 │   │   └── theme/       # Estilos globais
 │   └── package.json
-└── README.md
 ```
 
 ---
 
-## 5. Cronograma de Execução (Roadmap)
+## 5. DevOps, Ambientes e Testes (QA)
+Para garantir que o sistema não "quebre" em diferentes máquinas e não regrida em funcionalidades, adotaremos as seguintes estratégias:
+
+1.  **Docker (docker-compose)**: O PostgreSQL rodará dentro de um container Docker. Isso previne problemas de versão e facilita o "1-click rodar" para novos desenvolvedores.
+2.  **Variáveis de Ambiente**: Arquivos `.env.example` serão mantidos em `/front` e `/back`. Senhas do banco e segredos JWT NUNCA serão comitados.
+3.  **Testes Automatizados (QA)**: Implementação do **Pytest** no backend para validar rotas, regras de negócio e cálculo de comissionamentos.
+
+---
+
+## 6. Cronograma de Execução (Roadmap)
 
 ### META 1: Alicerce (Semana 1)
 - [ ] Criação do banco PostgreSQL no DBeaver.

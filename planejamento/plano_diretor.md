@@ -57,10 +57,13 @@ Estrutura redefinida para o PostgreSQL visando integridade e escalabilidade.
 
 ---
 
-## 3. Implementação de Segurança (OWASP Focus)
-1.  **Controle de Acesso**: Rotas do backend protegidas por tokens JWT. Admin tem acesso exclusivo a comissões e exclusão de vendas.
-2.  **Validação de Inputs**: Uso do **Pydantic** no FastAPI para garantir que nenhum dado malicioso chegue ao banco.
-3.  **Segurança da Informação**: Cabeçalhos de segurança (CORS, HSTS, XSS Protection) configurados via Middleware.
+## 3. Implementação de Segurança (OWASP & Privacidade)
+A segurança e a privacidade dos dados da empresa e dos usuários são inegociáveis.
+
+1.  **Isolamento de Dados Sensíveis**: Todo dado crítico (senhas, documentos, cálculos financeiros) será mantido exclusivamente no **Backend (FastAPI)** ou **PostgreSQL**. O Frontend receberá apenas o necessário para exibição, sanitizado de qualquer informação sensível.
+2.  **Controle de Acesso**: Rotas protegidas por JWT. Permissões granuladas (RBAC) garantem que vendedores não vejam dados administrativos.
+3.  **Validação de Inputs**: Uso do **Pydantic** para prevenir injeções maliciosas.
+4.  **Frontend Seguro**: Nenhuma informação sensível será armazenada no `localStorage` ou exposta em estados globais desnecessários.
 
 ---
 

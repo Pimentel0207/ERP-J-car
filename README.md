@@ -20,7 +20,7 @@ Estamos migrando o sistema para uma arquitetura escalável e segura, focando em:
 
 ### 🐍 Back-end (Python + FastAPI)
 - **API Monolítica:** Arquitetura sólida, moderna e de alto desempenho.
-- **Segurança Nativa:** Proteção OWASP total via Pydantic e JWT.
+- **🛡️ Isolamento de Dados**: Todo dado sensível permanece no Backend/DB (Sem vazar no Front).
 - **Auto-Documentação:** Swagger automático (`/docs`) para fácil desenvolvimento.
 
 ### 🐘 Banco de Dados (PostgreSQL)

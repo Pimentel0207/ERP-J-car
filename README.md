@@ -55,7 +55,7 @@ O projeto será dividido de forma clara para separar responsabilidades:
 ---
 
 ## 📑 Planejamento Detalhado
-Para mais informações sobre a migração técnica, consulte a pasta [planejamento/](planejamento/modernizacao.md).
+Para uma visão completa da arquitetura (ER Model, FastAPI, React e Segurança), consulte o nosso [Plano Diretor](planejamento/plano_diretor.md).
 
 ---
 *Desenvolvido por João - Focando em qualidade, segurança e performance.*

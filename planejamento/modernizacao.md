@@ -1,6 +1,6 @@
 # 🏗️ Planejamento: Migração e Segurança (OWASP)
 
-Este documento descreve os próximos passos para a evolução do **J-Car ERP 2.0**, focando em modernização tecnológica e padrões de segurança de nível industrial.
+Este documento descreve os objetivos de alto nível. Para especificações técnicas detalhadas (DB Schema, API, Segurança), acesse o [Plano Diretor](plano_diretor.md).
 
 ## 1. Migração para React + Vite
 Atualmente, o projeto utiliza HTML/JS puro. A migração para React trará:
